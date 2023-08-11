@@ -5,3 +5,5 @@
 .DS_Store
 *.bat
 **/old/**
+**/distances_full/**
+env_vars.rds
