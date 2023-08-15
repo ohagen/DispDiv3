@@ -76,24 +76,22 @@
     return(c(zeta, eta, theta)/gamma)
   }
   
-  supf$"PD_" <- function(occs_pt, prunedphy){
-    vals <- pd(occs_pt, prunedphy, include.root=T)
-    valsf <- vals[,1]
-    names(valsf) <- paste0("PD_", rownames(vals))
-    return(vals)
-  }
-  
-  supf$"PD_" <- function(occs_pt, prunedphy){
-    vals <- pd(occs_pt, prunedphy, include.root=F)
-    valsf <- vals[,1]
-    names(valsf) <- paste0("PD_", rownames(vals))
-    return(valsf)
-  }
+  # supf$"PD_" <- function(occs_pt, prunedphy){
+  #   vals <- pd(occs_pt, prunedphy, include.root=T)
+  #   valsf <- vals[,1]
+  #   names(valsf) <- paste0("PD_", rownames(vals))
+  #   return(vals)
+  # }
   
   supf$"phylo_metrics_" <- function(occs_pt, prunedphy){
-    pd_estimate <- pd.query(prunedphy, occs_pt, standardize = T)
-    mpd_estimate <- mpd.query(prunedphy, occs_pt, standardize = T)
-    mntd_estimate <- mntd.query(prunedphy, occs_pt, standardize = T)
+    #pd_estimate <- PhyloMeasures::pd.query(prunedphy, occs_pt, standardize = T) #standardized value of the unrooted Phylogenetic Diversity measure
+    pd_estimate <- picante::pd(occs_pt, prunedphy, include.root = TRUE)[,"PD"]
+    #cdhc = cophenetic distances for a hierarchical clustering
+    cdhc <- cophenetic(prunedphy)
+    # mpd_estimate <- PhyloMeasures::mpd.query(prunedphy, occs_pt, standardize = T) #standardized value of the Mean Pairwise Distance measure
+    mpd_estimate <- picante::mpd(occs_pt, cdhc)
+    #mntd_estimate <- PhyloMeasures::mntd.query(prunedphy, occs_pt, standardize = T) #standardized value of the Mean Nearest Taxon Distance measure
+    mntd_estimate <-picante::mntd(occs_pt, cdhc)
     # get patches names
     ptnames <- rownames(occs_pt)
     names(pd_estimate) <- paste0("PD_S_", ptnames)
@@ -104,12 +102,22 @@
   }
   
   
-  supf$"phylo_community_distance_" <- function(occs_pt, prunedphy){
+  supf$"community_distance_" <- function(occs_pt, prunedphy){
     # Computes the (standardized) value of the Community Distance measure
     # is the beta diversity version of Mean Pairwise Distance (MPD), giving the average phylogenetic distance between two communities.
-    pairs <- cbind(c(1,1,1,2,2,3), c(2,3,4,3,4,4))
-    vals <- cd.query(prunedphy, occs_pt, standardize = T,query.matrix =pairs)
-    names(vals) <- paste0("CD_S_", paste0(LETTERS[pairs[,1]], LETTERS[pairs[,2]]))
+    pairs <- list(c(1,1,1,2,2,3), c(2,3,4,3,4,4))
+    # vals <- cd.query(prunedphy, occs_pt, standardize = T,query.matrix =pairs)
+    #phylo
+    cdhc <- cophenetic(prunedphy)
+    dist <- comdist(occs_pt, cdhc)
+    
+    vals <- as.numeric(dist)
+    
+    #trait
+    
+    
+    
+    names(vals) <- paste0("CD_S_", paste0(LETTERS[pairs[[1]]], LETTERS[pairs[[2]]]))
     return(vals)
   }
   

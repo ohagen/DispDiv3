@@ -18,4 +18,4 @@ args=("$@")
 echo "Start running: ${args[@]:0:8}"
 
 # Run the simulation with Rscript command
-Rscript --vanilla run_single.R "M2" $SLURM_ARRAY_TASK_ID "perms_disp_comp_2000_M2"
+Rscript --vanilla run_combnine_summary_stats "M2" $SLURM_ARRAY_TASK_ID "perms_disp_comp_2000_M2"

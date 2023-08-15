@@ -115,7 +115,7 @@ read_zip <- function(what="sgen3sis.rds", zf, i=output_dir, ti=NULL){
 #### CALL ORDERED FILES
 get_ordered_files <- function(output_dir, model, fend=".zip"){
   outputs <- list.files(output_dir, recursive = F, full.names = F)
-  #selection... run only if necessary
+  #selection... doublecheck!
   selection <- grep(model, outputs, perl=T)
   outputs <- outputs[selection]
   # order outputs

@@ -14,7 +14,7 @@ source(file.path(pls$dir_base,"simulations/load_sim_libs.R"))
 cnfs <- commandArgs(trailingOnly = TRUE)
 print(cnfs)
 model <- cnfs[1] #e.g. model <- "M1"
-config_n <- cnfs[2] # e.g. config_n <- 1
+config_n <- as.numeric(cnfs[2]) # e.g. config_n <- 1
 expp <- cnfs[3] # e.g. expp <- "permuts_disp_comp_M0"
 
 # run simulation and store summary obejct to sim

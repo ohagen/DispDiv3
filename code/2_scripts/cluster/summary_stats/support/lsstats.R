@@ -142,11 +142,14 @@
     occs_pt <- occs_pt[, prunedphy$tip.label] # get same order as phylo
    
     vals2 <- list()
+    
+    #### BROWSER ! ----------
+    browser()
     # call stats for simplified object occs
     vals2[[1]] <- supf$"comp_alpha_p_"(occs_pt=occs_pt, patch_number=ptnb, patch_names=ptns,  gamma=psl$gamma_[["T"]])
-    vals2[[2]] <- supf$"PD_"(occs_pt, prunedphy)
+    #vals2[[2]] <- supf$"PD_"(occs_pt, prunedphy)
     vals2[[3]] <- supf$"phylo_metrics_"(occs_pt, prunedphy)
-    vals2[[4]] <- supf$"phylo_community_distance_"(occs_pt, prunedphy)
+    vals2[[4]] <- supf$"community_distance_"(occs_pt, prunedphy)
     
     # get phylogenetic distance matrix
     return(c(vals, unlist(vals2)))
@@ -196,7 +199,7 @@
     
     suppressWarnings(vals <- tryCatch(
       FD::dbFD(mean_trs[mask_present,mask_trs_var], abd_pt[mask_commun,mask_present], messages = FALSE)[c("FRic", "FEve", "FDiv", "FDis", "RaoQ")]
-                                      , error=function(err) NA))
+                                      , error=function(err) rep(NA,5))) 
     
     names(vals) <- stats_FD # refine results and bypass errors in dbFD
     

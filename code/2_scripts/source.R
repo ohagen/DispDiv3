@@ -21,18 +21,19 @@ patches <- list(
   "values"=1:4,
   "colors"=c("#1b9e77","#d95f02","#7570b3","#e7298a"),
   "center_coords"=patches_center_coords,
-  "center_ids"=c("490","532", "2950", "2992")
+  "center_ids"=c("490","532", "2950", "2992"),
+  "time-phase"=list("Total"=450:0, "Stable"=450:250, "Dynamic"=200:0)
 )
 
 # decleare paths list 
 pls <- list(
   "env_vars"="CLUSTER_IRRELEVANT",
   "sea_level"="CLUSTER_IRRELEVANT",
-  "dir_base"=      if(interactive()){"./code/2_scripts/cluster"}else{"."},
-  "dir_out"=       if(interactive()){"c:/temp/dispdiv3/output"}else{"output"},
-  "dir_env_gen"=   if(interactive()){"c:/temp/dispdiv3/mx_space/ddl"}else{"landscapes/ddl"},
-  "dir_config_gen"=if(interactive()){"./code/1_gen3sis_formalization/config"}else{"configs/"},
-  "dir_out_zip"=   if(interactive()){"c:/temp/dispdiv3/outputs_eve"}else{"/data/idiv_onstein/gen3sis/output"}# either NULL, no zipping and moving zipped file
+  "dir_base"=if(interactive()){"./code/2_scripts/cluster"}else{"./code/2_scripts/cluster"},
+  "dir_out"=if(interactive()){"c:/temp/dispdiv3/output"}else{"output"},
+  "dir_env_gen"=if(interactive()){"c:/temp/dispdiv3/mx_space/ddl"}else{"landscapes/ddl"},
+  "dir_config_gen"=if(interactive()){"./code/1_gen3sis_formalization/config"}else{"configs"},
+  "dir_out_zip"=if(interactive()){"c:/temp/dispdiv3/outputs_eve"}else{"/data/idiv_onstein/gen3sis/output"}# if NULL, no zipping and moving zipped file
   ) 
 
 
@@ -51,3 +52,16 @@ get_range <- function(range=list("min"=env_vars$min_temp, "max"=env_vars$max_tem
   return(rt)
 }
 
+get_timesteps_in_Ma <- function(timesteps, range=TRUE, space=" ", unit="Ma", convfact=100){
+  # returns the formated time desired from time-steps to Ma
+  # timesteps is/are a number or a vector of numbers
+  # if range=T, provides the printed output
+  if (range) {
+    numbs <- paste0(round(range(timesteps, na.rm=T)[c(2,1)]/100,2), collapse="-")
+  } else {
+    numbs <- paste0(formatC(round(timesteps/convfact,2), digits=2,  format="f", preserve.width = "common"))
+  }
+  numbs <- paste0(numbs,space,unit)
+  return(numbs)
+  
+}
