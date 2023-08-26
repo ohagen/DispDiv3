@@ -96,6 +96,12 @@
     return(unname(n_sp_alive))
   }
   
+  lsstats$"mean_abd" <- function(abd=temp_abundance_tx){
+    sabds <- unlist(lapply(abd, sum))
+    qabd <- quantile(sabds, c(0.05, 0.5, 0.95))
+    return(qabd)
+  }
+  
   lsstats$"mtx" <- function(sg=temp_sgen3sis, phylo=temp_phy, occst=temp_occ_tx, lc=temp_l, tx=temp_t_i){
     # multiple stats here that are , returning a variable large vector of summary statistics
     # remove x y coordinates
@@ -130,26 +136,23 @@
     names(vals) <- gsub("\\.", "", names(vals)) # remove points
     
     # call here the stats that use the prepared occst, etc...
-    
     # prepare the occs_pt objects for calculation
     occs_pt <- NULL
     for (cati in 1:length(ptnb)){
       occs_pt <- rbind(occs_pt, as.numeric(as.logical(colSums(occst[pt_ti==ptnb[cati], ]))))
     }
-    dimnames(occs_pt) <- list(ptns, paste0("species",colnames(occst)))
+    occs_pt <- rbind(occs_pt, as.numeric(as.logical(colSums(occs_pt)))) # add total col
+    dimnames(occs_pt) <- list(c(ptns, "T"), paste0("species",colnames(occst)))
     
     prunedphy <- prune.sample(occs_pt, phylo) # just to make sure! Should allways hold
     occs_pt <- occs_pt[, prunedphy$tip.label] # get same order as phylo
    
     vals2 <- list()
-    
-    #### BROWSER ! ----------
-    browser()
     # call stats for simplified object occs
     vals2[[1]] <- supf$"comp_alpha_p_"(occs_pt=occs_pt, patch_number=ptnb, patch_names=ptns,  gamma=psl$gamma_[["T"]])
     #vals2[[2]] <- supf$"PD_"(occs_pt, prunedphy)
-    vals2[[3]] <- supf$"phylo_metrics_"(occs_pt, prunedphy)
-    vals2[[4]] <- supf$"community_distance_"(occs_pt, prunedphy)
+    vals2[[2]] <- supf$"phylo_metrics_"(occs_pt, prunedphy)
+    vals2[[3]] <- supf$"community_distance_"(occs_pt, prunedphy)
     
     # get phylogenetic distance matrix
     return(c(vals, unlist(vals2)))
@@ -232,7 +235,7 @@
     # modes
     # get the number of nodes in the data
     trsall <- do.call(rbind, trs)
-    modes <- apply(trsall, 2, function(x){Modes(x)$modes})
+    modes <- apply(trsall, 2, function(x){Modes(x)$modes}, simplify=FALSE)
     vals_mode <- unlist(lapply(modes, function(x){length(unique(round(x,4) ))}))
     names(vals_mode) <- paste0("modes_", names(vals_mode))
     
@@ -242,43 +245,70 @@
     names(vals_quant) <- gsub("\\.", "_", names(vals_quant)) # remove points
     
     # spread
-    vals_spread <- apply(trsall, 2, function(x){
+    vals_spread <- apply(trsall, 2,  function(x){
       rg <- range(round(x,4))
       return(rg[2]-rg[1])
-    }, simplify = T)
+    }, simplify = FALSE)
     names(vals_spread) <- paste0("spread_", names(vals_spread))
     
     return(c(vals_mode, vals_quant, vals_spread))
   }
   
-  lsstats$"maxlik_betasplit_" <- function(phylo=temp_phy){
+  
+  
+  lsstats$"maxlik_betasplit" <- function(phylo=temp_phy){
+    #phylo <- unroot(phylo)
     # get the beta splits for full phylogeny (TF), pruned, (TP), and pruned species 1,2 and 3
     bsplit <- rep(NA,5)
     names(bsplit) <- c("TF", "TP", 1:3)
     tl <- list()
-    if (length(phylo$tip.label)>3){
+    if (length(phylo$tip.label)>10){
       bsplit["TF"] <- maxlik.betasplit(phylo,confidence.interval="none")$max_lik
       bsplit["TP"] <- maxlik.betasplit(drop.fossil(phylo), confidence.interval="none")$max_lik
-      #plot(phylo, show.tip.label=F, show.node.label = T, node.pos = 1)
-      twotrees <- splitTree(phylo, list("node"=phylo$edge[1,2], "bp"=0.1))
-      largest <- unlist(lapply(twotrees, function(x){max(node.depth(x))}))
-      largest_i <-which(largest==max(largest))[1]
-      twotrees2 <- splitTree(twotrees[[largest_i]], list("node"=twotrees[[largest_i]]$edge[1,2], "bp"=0.1))
-      tt <- list()
-      tt[[1]] <- twotrees[[1]]
-      tt[[2]] <- twotrees2[[1]]
-      tt[[3]] <- twotrees2[[2]]
-      # get order by ancestor species
-      l_ord <- unlist(lapply(tt, function(x){
-        c(1:3)[paste0("species", 1:3)%in%x$tip.label]
-        }))
-      names(tt) <- l_ord
+      
+      list_sis_sps <- list()
+      par(mfrow=c(1,3))
+      for (sps_i in 1:3){
+        # sps_i <- 1
+        nms <- getMommy(phylo, N=paste0("species", sps_i))
+        n_nms <- length(nms)
+        keepit <- rep(FALSE, n_nms)
+        sizesis <- rep(NA, n_nms)
+        vtips <- list()
+        for (nodei in 1:n_nms){
+          vtips[[nodei]] <- tips(phylo, nms[nodei])
+          sizesis[nodei] <- length(vtips[[nodei]])
+          keep <- c("species1", "species2", "species3")%in%vtips[[nodei]]
+          # print(keep)
+          if ((sum(keep)==1)&(keep[sps_i]==TRUE)&sizesis[nodei]>=10){
+            keepit[nodei] <- TRUE
+          }
+          
+        }
+        if((sum(keepit)>0)){
+          index_f <- (1:length(keepit))[keepit][which.max(sizesis[keepit])]
+          #nodef <- nms[index_f]
+          vtipsf <- vtips[[index_f]]
+          list_sis_sps[[sps_i]] <- keep.tip(phylo, vtipsf)
+        }else{
+          list_sis_sps[[sps_i]] <- NA
+        }
+      } # end loop over species
+      # run stats
       for (spi in 1:3){
-        bsplit[as.character(spi)] <- tryCatch(
-          maxlik.betasplit(drop.fossil(tt[[as.character(spi)]]), confidence.interval="none")$max_lik
+        if (!is.na(list_sis_sps[[spi]][1])){
+          bsplit[as.character(spi)] <- tryCatch(
+          maxlik.betasplit(drop.fossil(list_sis_sps[[spi]]), confidence.interval="none")$max_lik
           , error=function(err) NA)
+        }
       }
     }
     return(bsplit)
   }
+  
+  
+  
+  
+  
+  
 } # end fix time statistics

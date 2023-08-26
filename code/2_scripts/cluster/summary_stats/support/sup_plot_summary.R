@@ -130,3 +130,34 @@ plot_space_changes <- function(space=ssltt[[1]]$spatial_sps$`+1`,  na.val=0, ...
   plot(spdx, type='l', ...)
 }
 
+plot_stat_classes_p <- function(mbt=lt[[3]], 
+                                y = "gamma", 
+                                x="range_spatial_sps_0_mean",
+                                cats="trs.competition_50%", 
+                                plt_type=NULL,
+                                xposbar=NULL,
+                                yposbar=NULL,
+                                ...){
+  classes <- unique(mbt[,cats])
+  n_classes <- length(classes)
+  cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes))
+  plot(x=mbt[,x],y=mbt[,y], col=cols[as.factor(mbt[,cats])], bty ="n", pch=16, cex=0.05, ...)
+  if (plt_type=="legend"){
+    legend("topleft", legend = classes, col=cols, pch=3, bty="n")
+  } else if (plt_type=="colbar"){
+    ypos1 <- if (is.null(yposbar)){0.8*max(mbt[,y])}else{yposbar}
+    ypos2 <- ypos1-0.08*ypos1
+    ypos3 <- ypos2-0.025*ypos2
+    width_colbar <- 0.05
+    length_colbar <- 0.3
+    xpos <- if (is.null(xposbar)){0.8*max(mbt[,x])}else{yposbar}
+    
+    colorbar.plot(x=xpos, y=ypos2, strip=1:n_classes, col = cols, 
+                  strip.width=width_colbar, strip.length=length_colbar,
+                  horizontal = TRUE, adj.y=0)
+    text(x=xpos, y=ypos1, labels = "competition")
+    text(x=xpos-(length_colbar*xpos), y=ypos3, labels = "high")
+    text(x=xpos+(length_colbar*xpos), y=ypos3, labels = "neutral")
+  }
+}
+

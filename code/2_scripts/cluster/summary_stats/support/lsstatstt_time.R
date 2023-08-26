@@ -74,7 +74,7 @@ lssttstt_time <- list()
   }
   
   
-  lssttstt_time$"trs"=function(ss=temp_ssin, trnames=c("dispersal", "competition", "temp_width", "mean_temp")){
+  lssttstt_time$"trs"=function(ss=temp_ss, trnames=c("dispersal", "competition", "temp_width", "mean_temp")){
     # traits
     n_trs <- length(trnames)
     ref_index <- grep("mean_tr", names(ss))
@@ -86,7 +86,7 @@ lssttstt_time <- list()
     }
     names(ltrs) <- paste0(trnames)
     vals <- unlist(ltrs)
-    names(vals) <- gsub("\\.", "_", names(vals1))
+    names(vals) <- gsub("\\.", "_", names(vals))
     return(vals)
   }
 }

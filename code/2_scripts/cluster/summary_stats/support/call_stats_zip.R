@@ -71,8 +71,8 @@ call_stats_zip <- function(zf, i=output_dir, l=landscape, o=dir_summaries, verbo
   ### RUN STATS ###
   #format if ti otherwise keep as is, i.e. list
   if (n_ts==1){ssu <- unlist(ss, use.names = T)}else{ssu <- ss}
-  
-  
+  names(ssu) <- gsub("\\.", "_", names(ssu))
+
   #saving
   if (save){ # if save
     if (!dir.exists(file.path(o, ssname))){

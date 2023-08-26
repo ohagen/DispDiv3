@@ -71,7 +71,7 @@
     names(eta) <- "eta_T"
     unique <- colSums(occs_pt)==1
     theta <- rowSums(occs_pt[, unique, drop=F])
-    names(theta) <- paste0("theta_", patch_names)
+    names(theta) <- paste0("theta_", names(theta))
     
     return(c(zeta, eta, theta)/gamma)
   }
@@ -97,7 +97,6 @@
     names(pd_estimate) <- paste0("PD_S_", ptnames)
     names(mpd_estimate) <- paste0("MPD_S_", ptnames)
     names(mntd_estimate) <- paste0("MNTD_S_", ptnames)
-    
     return(c(pd_estimate, mpd_estimate, mntd_estimate))
   }
   
@@ -109,14 +108,9 @@
     # vals <- cd.query(prunedphy, occs_pt, standardize = T,query.matrix =pairs)
     #phylo
     cdhc <- cophenetic(prunedphy)
-    dist <- comdist(occs_pt, cdhc)
-    
+    dist <- comdist(occs_pt[!rownames(occs_pt)%in%"T",], cdhc)
     vals <- as.numeric(dist)
-    
     #trait
-    
-    
-    
     names(vals) <- paste0("CD_S_", paste0(LETTERS[pairs[[1]]], LETTERS[pairs[[2]]]))
     return(vals)
   }

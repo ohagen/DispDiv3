@@ -24,11 +24,12 @@ call_sstatstt_time <- function(ssi){
   n_era <- length(timephaz)
   lera <- list()
   for (era_i in 1:n_era){
-    # era_i <- 3
+    # era_i <- 1
     nice_range <- get_timesteps_in_Ma(timephaz[[era_i]])
     print(paste("At time phase:", names(timephaz)[n_era], nice_range))
     # apply time selection
-    temp_ssin <- lapply(ssin, function(x){
+    temp_ss <<-NULL
+    temp_ss <<- lapply(ssin, function(x){
       x <- x[as.numeric(rownames(x))%in%timephaz[[era_i]],]
       return(x)
     }) #as.numeric(rownames(x))%in%tt

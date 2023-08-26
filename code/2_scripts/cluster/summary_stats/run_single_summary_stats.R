@@ -11,12 +11,13 @@ source("./code/2_scripts/source.R")
 print(unlist(pls))
 source(file.path(pls$dir_base,"summary_stats/support/load_support_libs.R"))
 
-## 
-cnfs <- commandArgs(trailingOnly = TRUE)
-print(cnfs)
-model <- cnfs[1] #e.g. model <- "M0"
-config_n <- as.numeric(cnfs[2]) # e.g. config_n <- 1
-expp <- cnfs[3] # e.g. expp <- "perms_disp_comp_2000_M0"
+# parameters
+if(!interactive()){
+  cnfs <- commandArgs(trailingOnly = TRUE)
+  print(cnfs)}
+model <- if(interactive()){"M0"}else{cnfs[1]}
+config_n <- if(interactive()){1}else{as.numeric(cnfs[2])}
+expp <- if(interactive()){"perms_disp_comp_2000_M0"}else{cnfs[3]}
 
 # # load parameters table
 parms <- load_parameters(dc=pls$dir_config_gen, expp, model)

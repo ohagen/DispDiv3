@@ -52,12 +52,13 @@ get_range <- function(range=list("min"=env_vars$min_temp, "max"=env_vars$max_tem
   return(rt)
 }
 
-get_timesteps_in_Ma <- function(timesteps, range=TRUE, space=" ", unit="Ma", convfact=100){
+get_timesteps_in_Ma <- function(timesteps, range=TRUE, space=" ", unit="Ma", convfact=100, rev=TRUE){
   # returns the formated time desired from time-steps to Ma
   # timesteps is/are a number or a vector of numbers
   # if range=T, provides the printed output
   if (range) {
-    numbs <- paste0(round(range(timesteps, na.rm=T)[c(2,1)]/100,2), collapse="-")
+    fs <- if(rev){c(2,1)}else{c(1,2)}
+    numbs <- paste0(round(range(timesteps, na.rm=T)[fs]/convfact,2), collapse="-")
   } else {
     numbs <- paste0(formatC(round(timesteps/convfact,2), digits=2,  format="f", preserve.width = "common"))
   }
@@ -65,3 +66,17 @@ get_timesteps_in_Ma <- function(timesteps, range=TRUE, space=" ", unit="Ma", con
   return(numbs)
   
 }
+
+get_parm_stats <- function(parms=expp_st$parms, stat=expp_st$stats$t){
+  # parameters and stats data.frame 
+  # from summary is the .rds file saved by run_combine_summary_stats.R
+  combined <- cbind(parms[rownames(stat),], stat)
+  combined[is.na(combined)] <- NA
+  return(combined)
+}
+# get final merged table
+# mbt <- cbind(parms[rownames(dbssl),], dbssl)
+# mbt[is.na(mbt)] <- NA
+#### SAVE MBT
+# time_stamp <- format(Sys.time(), "%Y%m%d_%H%M")
+# saveRDS(mbt, file.path(pls$dir_out_zip, "temp_summary", expp, paste0(time_stamp,"_ti_", expp,".rds")))
