@@ -97,6 +97,8 @@ plot_stat_classes_summary <- function(mbt, stats_names, colbar.at=1, limit_val=3
     if (stat_i==colbar.at){ # plot colbar
       classes <- unique(mbt[,"competition"])
       n_classes <- length(classes)
+      #mycol <- colorRampPalette(c("#f72585", "#b5179e", "#3a0ca3", "#4cc9f0" ))
+      #cols <- mycol(n_classes)
       cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes))
       ypos1 <- max(mbt[,stats_names[stat_i]], na.rm=T)
       

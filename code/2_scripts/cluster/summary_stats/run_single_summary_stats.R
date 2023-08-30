@@ -33,7 +33,8 @@ n_outs <- length(outputs)
 print(n_outs)
 ####       CALL STATS!      ###
 #### FIX and var TIME #########
-for (ti in list(0, 500:0)){ # first for the single time step, then for a sequence of time steps...
+for (ti in list(0)){  # , 500:0)){ # first for the single time step, then for a sequence of time steps...
+  # ti <- 0
   print(paste0("working with: ", outputs[config_n], ", config_n=", config_n, " | at ", length(ti), " time-steps | experiment ", expp))
   # ti <- 0
   call_stats_zip(zf=outputs[config_n], 

@@ -64,7 +64,6 @@
     #[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8525081/] and DOI: 10.1002/ece3.8096
     # Eta: species that are not unique to an assemblage nor common to all assemblages.
     # Theta: species that are unique to an assemblage.
-    
     zeta <- sum(colSums(occs_pt)==length(patch_number))
     names(zeta) <- "zeta_T"
     eta <- sum((colSums(occs_pt)<length(patch_number))&(colSums(occs_pt)>1))

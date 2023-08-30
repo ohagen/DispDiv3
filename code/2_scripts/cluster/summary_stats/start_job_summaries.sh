@@ -1,6 +1,6 @@
 #!/bin/bash
 #This file is called submit-script.sh
-#SBATCH --time=0-12:00:00       # run time in days-hh:mm:ss
+#SBATCH --time=0-5:00:00       # run time in days-hh:mm:ss
 #SBATCH --chdir=/work/hageno
 #SBATCH --error=logs/job.%J-%a.err
 #SBATCH --output=logs/job.%J-%a.out

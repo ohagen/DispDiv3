@@ -28,18 +28,27 @@ addTrans <- function(color,trans)
   return(res)
 }
 
-plot_stat_classes <- function(mbt, cats="competition", y="gamma", x="dispersal", plt_type="colbar",...){
+plot_stat_classes <- function(mbt, cats="competition", y="gamma", x="dispersal", 
+                              plt_type="colbar", ylab=NULL, plotblank=FALSE, ...){
   # plt type is either legend or colbar. If anything else, no leggend/bar is added
-  plot(NULL, xlab=x, ylab=y,
+  if (is.null(ylab)){
+    xlabis=x
+    ylabis=y
+  } else {
+    xlabis=x
+    ylabis=ylab
+  }
+  plot(NULL, xlab=xlabis, ylab=ylabis,
        xlim=range(mbt[,x], na.rm=T), ylim=range(mbt[,y], na.rm=T), bty ="n")#, ...)
   
   classes <- unique(mbt[,cats])
   n_classes <- length(classes)
-  cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes))
+  # mycol <- colorRampPalette(c("#f72585", "#b5179e", "#3a0ca3", "#4cc9f0" ))
+  cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes)) # mycol(n_classes) #
   for (c_i in 1:n_classes){
     #c_i <- 1
     selection <- mbt[,cats]==classes[c_i]
-    lines(x=mbt[selection,x],y=mbt[selection,y], col=cols[c_i])
+    if (!plotblank){lines(x=mbt[selection,x],y=mbt[selection,y], col=cols[c_i])}
   }
   if (plt_type=="legend"){
     legend("topleft", legend = classes, col=cols, pch=3, bty="n")
@@ -60,8 +69,6 @@ plot_stat_classes <- function(mbt, cats="competition", y="gamma", x="dispersal",
 
   
 }
-
-
 
 plot_time_y <- function(mbtt, time=as.character(500:0), y="gamma", x="divergence_threshold", ...){
   plot(NULL, xlab=x, ylab=y,
@@ -141,7 +148,9 @@ plot_stat_classes_p <- function(mbt=lt[[3]],
   classes <- unique(mbt[,cats])
   n_classes <- length(classes)
   cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes))
-  plot(x=mbt[,x],y=mbt[,y], col=cols[as.factor(mbt[,cats])], bty ="n", pch=16, cex=0.05, ...)
+  #mycol <- colorRampPalette(c("#f72585", "#b5179e", "#3a0ca3", "#4cc9f0" ))
+  #cols <- mycol(n_classes)
+  plot(x=mbt[,x],y=mbt[,y], col=cols[as.factor(mbt[,cats])], bty ="n", pch=16, cex=0.5, ...)
   if (plt_type=="legend"){
     legend("topleft", legend = classes, col=cols, pch=3, bty="n")
   } else if (plt_type=="colbar"){

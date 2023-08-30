@@ -22,7 +22,8 @@ patches <- list(
   "colors"=c("#1b9e77","#d95f02","#7570b3","#e7298a"),
   "center_coords"=patches_center_coords,
   "center_ids"=c("490","532", "2950", "2992"),
-  "time-phase"=list("Total"=450:0, "Stable"=450:250, "Dynamic"=200:0)
+  "time-phase"=list("Total"=450:0, "Stable"=450:250, "Dynamic"=200:0),
+  "disprange"=list(c(0,0.15), c(0.15,0.55), c(0.55,1))
 )
 
 # decleare paths list 

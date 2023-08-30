@@ -306,8 +306,132 @@
     return(bsplit)
   }
   
+    lsstats$"maxlik_betasplit" <- function(phylo=temp_phy){
+    #phylo <- unroot(phylo)
+    # get the beta splits for full phylogeny (TF), pruned, (TP), and pruned species 1,2 and 3
+    bsplit <- rep(NA,5)
+    names(bsplit) <- c("TF", "TP", 1:3)
+    tl <- list()
+    if (length(phylo$tip.label)>10){
+      bsplit["TF"] <- maxlik.betasplit(phylo,confidence.interval="none", up=30)$max_lik
+      bsplit["TP"] <- maxlik.betasplit(drop.fossil(phylo), confidence.interval="none")$max_lik
+      
+      list_sis_sps <- list()
+      par(mfrow=c(1,3))
+      for (sps_i in 1:3){
+        # sps_i <- 1
+        nms <- getMommy(phylo, N=paste0("species", sps_i))
+        n_nms <- length(nms)
+        keepit <- rep(FALSE, n_nms)
+        sizesis <- rep(NA, n_nms)
+        vtips <- list()
+        for (nodei in 1:n_nms){
+          vtips[[nodei]] <- tips(phylo, nms[nodei])
+          sizesis[nodei] <- length(vtips[[nodei]])
+          keep <- c("species1", "species2", "species3")%in%vtips[[nodei]]
+          # print(keep)
+          if ((sum(keep)==1)&(keep[sps_i]==TRUE)&sizesis[nodei]>=10){
+            keepit[nodei] <- TRUE
+          }
+          
+        }
+        if((sum(keepit)>0)){
+          index_f <- (1:length(keepit))[keepit][which.max(sizesis[keepit])]
+          #nodef <- nms[index_f]
+          vtipsf <- vtips[[index_f]]
+          list_sis_sps[[sps_i]] <- keep.tip(phylo, vtipsf)
+        }else{
+          list_sis_sps[[sps_i]] <- NA
+        }
+      } # end loop over species
+      # run stats
+      for (spi in 1:3){
+        if (!is.na(list_sis_sps[[spi]][1])){
+          bsplit[as.character(spi)] <- tryCatch(
+          maxlik.betasplit(drop.fossil(list_sis_sps[[spi]]), confidence.interval="none")$max_lik
+          , error=function(err) NA)
+        }
+      }
+    }
+    return(bsplit)
+  }
   
   
+  # 
+  # # WIP#
+  # lsstats$"trs_evol" <- function(phylo=temp_phy, trs=temp_traits_tx, abd=temp_abundance_tx){
+  #   #### BROWSER ! ----------
+  #   browser()
+  #   n_sp <- length(trs)
+  #   trsv <- rep(NA, n_sp)
+  #   names(trsv) <- paste0("species",names(trs))
+  #   for (spi in 1:n_sp){
+  #     # spi <- 1
+  #     mean_abd <- mean(abd[[spi]])
+  #     weight_abd <- /mean_abd
+  #     for (ti in trn){
+  #       traits[cells_cluster, ti] <- mean(traits[cells_cluster, ti]*weight_abd)
+  #     }
+  #   }
+  #   
+  #   
+  #   
+  #   
+  #   
+  #   
+  #   
+  #   trsm <- lapply(trs, function(mean(x$dispersal)))
+  #   
+  #   #phylo <- unroot(phylo)
+  #   # get the beta splits for full phylogeny (TF), pruned, (TP), and pruned species 1,2 and 3
+  #   bsplit <- rep(NA,5)
+  #   names(bsplit) <- c("TF", "TP", 1:3)
+  #   tl <- list()
+  #   if (length(phylo$tip.label)>10){
+  #     bsplit["TF"] <- maxlik.betasplit(phylo,confidence.interval="none")$max_lik
+  #     bsplit["TP"] <- maxlik.betasplit(drop.fossil(phylo), confidence.interval="none")$max_lik
+  #     
+  #     list_sis_sps <- list()
+  #     par(mfrow=c(1,3))
+  #     for (sps_i in 1:3){
+  #       # sps_i <- 1
+  #       nms <- getMommy(phylo, N=paste0("species", sps_i))
+  #       n_nms <- length(nms)
+  #       keepit <- rep(FALSE, n_nms)
+  #       sizesis <- rep(NA, n_nms)
+  #       vtips <- list()
+  #       for (nodei in 1:n_nms){
+  #         vtips[[nodei]] <- tips(phylo, nms[nodei])
+  #         sizesis[nodei] <- length(vtips[[nodei]])
+  #         keep <- c("species1", "species2", "species3")%in%vtips[[nodei]]
+  #         # print(keep)
+  #         if ((sum(keep)==1)&(keep[sps_i]==TRUE)&sizesis[nodei]>=10){
+  #           keepit[nodei] <- TRUE
+  #         }
+  #         
+  #       }
+  #       if((sum(keepit)>0)){
+  #         index_f <- (1:length(keepit))[keepit][which.max(sizesis[keepit])]
+  #         #nodef <- nms[index_f]
+  #         vtipsf <- vtips[[index_f]]
+  #         list_sis_sps[[sps_i]] <- keep.tip(phylo, vtipsf)
+  #       }else{
+  #         list_sis_sps[[sps_i]] <- NA
+  #       }
+  #     } # end loop over species
+  #     # run stats
+  #     for (spi in 1:3){
+  #       if (!is.na(list_sis_sps[[spi]][1])){
+  #         bsplit[as.character(spi)] <- tryCatch(
+  #           maxlik.betasplit(drop.fossil(list_sis_sps[[spi]]), confidence.interval="none")$max_lik
+  #           , error=function(err) NA)
+  #       }
+  #     }
+  #   }
+  #   return(bsplit)
+  # }
+  # # END WIP
+  # 
   
   
   
