@@ -63,6 +63,8 @@ All models, i.e. M0, M1 and M2, were initiated at 5 Ma with three species, each 
 
 This automatically made species within a simulation not only diverge between each other on their temperature optime $T_i$ and niche widht $\omega_i$ (i.e. for M0, M1 and M2), but also on dispersal $d_i$ and competitive $l_i$ traits (i.e. for M1 and M2). For each counterfactual, we ran 2000 simulations with the same parameters for all models. This systematic exploration of alternative scenarios allowed us to assess the impact of specific model parameters on the resulting biodiversity patterns. We additionally run $XYZ=XYZ$ Specifically, we collected $\alpha$, $\beta$ and $\gamma$ biodiversity metrics, colonization, speciation, extinction as well as trait proxies related to environmental and biotic suitability.
 
+To estimate equilibrium in the context of competition dynamics, we implement an iterative approach. Firstly, all species in a site are checked to determine if $a_{ff}>a_{ff}$ (condition 1, eq. 8). If not, the species is removed from consideration as conspecifics compete weaker than heterospecifics. Next, the carrying capacity ($J^{*}$) is estimated based on the values of $K_f, a_{ff}, a_{fh}$ for each species *f (*eq. 10). Then, all species are checked again to see if the product of the intraspecific competition coefficient and carrying capacity is greater than the product of the interspecific competition coefficient $a_{ff}K>a_{fhJ^{*}}$ (condition 2, eq. 8).  Species that do not meet this condition, indicating a too low carrying capacity, are removed, and the estimation process returns estimating $J^{*}$ (eq. 10). This is repeated until all remaining species satisfy the condition 2. Finally, the equilibrium biomass of each species$B^*_f$ is demonstrated using equation 8.
+
 ## Initial conditions
 
 We did a full factorial experiment ranging from extreme dispersal and competitive abilities $d_i=$ `r put_brak(sss[[1]]$parms$dispersal)` $l_i=$ `r put_brak(sss[[1]]$parms$competition)` and fixed $\Theta_s=65$ (@fig-init-parameters) . For model M2 we impose the trade-off to the same parameters as in the other models, so that no initial species would have a "assumingly wrong" -- meaning, wrong for consistency of M2. We randomized the seed at this stage, so that each single simulation could be reproduced.
@@ -89,9 +91,8 @@ M0 diversity statistics reflected our expectations on general patterns of divers
 #| fig-cap: |
 #|   Summary statistics for M0 though dispersal. Each line corresponds to simulation within a same competitive value along dispersal ability.
 mbt <- get_parm_stats(parms = sss[[1]]$parms, stat = sss[[1]]$stats$t)
-main_stats_names <- c("gamma", "mtx_beta_prop_T","mtx_mean_alpha_T", "mtx_zeta_T","mtx_eta_T","maxlik_betasplit_TF", "speciations_perc", "extinctions_perc", "mtx_MPD_S_T", "mtx_MNTD_S_T")#
+main_stats_names <- c("gamma", "mtx_beta_prop_T","mtx_mean_alpha_T", "mtx_zeta_T","mtx_eta_T","maxlik_betasplit_TF","speciations_perc", "extinctions_perc", "mtx_MPD_S_T", "mtx_MNTD_S_T")#
 plot_stat_classes_summary(mbt, main_stats_names)
-
 ```
 
 ```{r}
@@ -109,8 +110,6 @@ plot_stat_classes_summary(mbt, colnames(mbt)[!colnames(mbt)%in%main_stats_names]
 plot_stat_classes_summary(mbt, colnames(mbt)[!colnames(mbt)%in%main_stats_names][c(94:100)])
 abline(h=0)
 ```
-
-
 
 ```{r}
 #| label: fig-speciation-M0-though_time
@@ -166,7 +165,7 @@ for (disprange_i in 1:n_dispr) {
 
 ```
 
-Investigating spatial dynamics for M0 during 45-0Ma ( @fig-space-M0-though_time A-D) shows that mean range increases with dispersal, while changes leave scale signatures and show that proportional change (i.e. $\frac{(increase - decrease)}{totalrange}$). decreases with competition, while neutral models have higher proportional increase/decrease ratio. Moreover, we can see that this signature was stronger during the dynamic stage of this simulations ( @fig-space-M0-though_time I-L).
+Investigating spatial dynamics for M0 during 45-0Ma ( @fig-space-M0-though_time A-D) shows that mean range increases with dispersal, while changes leave scale signatures and show that proportional change (i.e. $\frac{(increase - decrease)}{totalrange}$). decreases with competition, while neutral models have higher proportional increase/decrease ratio. Moreover, we can see that this signature was stronger during the dynamic stage of this simulations ( @fig-space-M0-though_time I-L). We can see this
 
 ```{r}
 #| label: fig-space-M0-though_time
@@ -242,26 +241,26 @@ lmodmbt <- lapply(lmodmbt, function(x){
 
 cor_stats_namess2 <- c(
   "dispersal",
-  #"trs.dispersal_50%",
+  #"trs_dispersal_50%",
   "competition",
   #"trs_dispersal_slope_time",
-  #"trs.spread_dispersal",
-  #"trs.competition_50%",
+  #"trs_spread_dispersal",
+  #"trs_competition_50%",
   #"trs_competition_slope_time",
-  #"trs.spread_competition",
+  #"trs_spread_competition",
   #"trs_temp_width_slope_time",
-  #"trs.spread_temp_width",
+  #"trs_spread_temp_width",
   "speciations_perc",
   "extinctions_perc",
   #"turnover",
   "gamma",
-  "mtx.mean_alpha_T",
-  "mtx.beta_prop_T",
-  "mtx.zeta_T",
-  "mtx.eta_T",
+  "mtx_mean_alpha_T",
+  "mtx_beta_prop_T",
+  "mtx_zeta_T",
+  "mtx_eta_T",
   #"mtx.PD_S_T",
-  "mtx.MPD_S_T",
-  "mtx.MNTD_S_T"
+  "mtx_MPD_S_T",
+  "mtx_MNTD_S_T"
   #"range_spatial_sps_+1_mean",
   #"range_spatial_sps_-1_mean",
   #"range_spatial_sps_0_mean"
@@ -270,7 +269,7 @@ cor_stats_namess2 <- c(
 )
 # remove finished
 # lmodmbt <- lapply(lmodmbt, function(x){
-#   x <- x[, -grep(c("trs.|_A|_B|_C|_D|mtx.NA"),colnames(x))]
+#   x <- x[, -grep(c("trs_|_A|_B|_C|_D|mtx.NA"),colnames(x))]
 #   return(x[,!colnames(x)%in%c("seed","finished", "divergence_threshold", "n_sp_alive_t_0", "cpu_time")])
 # })
 
@@ -285,7 +284,7 @@ lmodmbt <- lapply(lmodmbt, function(x){
 
 
 m0disps <- list()
-ranges <- list(c(.3,.5), c(.6,9))
+ranges <- patches$disprange[-1]
 disp <- lmodmbt[[1]]$dispersal
 for (r_i in 1:length(ranges)){
   mask <- (disp>ranges[[r_i]][1])&(disp<=ranges[[r_i]][2])
@@ -338,26 +337,26 @@ lmodmbt <- lapply(lmodmbt, function(x){
 
 cor_stats_namess2 <- c(
   "dispersal",
-  #"trs.dispersal_50%",
+  #"trs_dispersal_50%",
   "competition",
   "trs_dispersal_slope_time",
-  #"trs.spread_dispersal",
-  #"trs.competition_50%",
+  #"trs_spread_dispersal",
+  #"trs_competition_50%",
   "trs_competition_slope_time",
-  #"trs.spread_competition",
+  #"trs_spread_competition",
   "trs_temp_width_slope_time",
-  #"trs.spread_temp_width",
+  #"trs_spread_temp_width",
   "speciations_perc",
   "extinctions_perc",
   #"turnover",
   "gamma",
-  "mtx.mean_alpha_T",
-  "mtx.beta_prop_T",
-  "mtx.zeta_T",
-  "mtx.eta_T",
+  "mtx_mean_alpha_T",
+  "mtx_beta_prop_T",
+  "mtx_zeta_T",
+  "mtx_eta_T",
   #"mtx.PD_S_T",
-  "mtx.MPD_S_T",
-  "mtx.MNTD_S_T"
+  "mtx_MPD_S_T",
+  "mtx_MNTD_S_T"
   #"range_spatial_sps_+1_mean",
   #"range_spatial_sps_-1_mean",
   #"range_spatial_sps_0_mean"
@@ -366,7 +365,7 @@ cor_stats_namess2 <- c(
 )
 # remove finished
 # lmodmbt <- lapply(lmodmbt, function(x){
-#   x <- x[, -grep(c("trs.|_A|_B|_C|_D|mtx.NA"),colnames(x))]
+#   x <- x[, -grep(c("trs_|_A|_B|_C|_D|mtx.NA"),colnames(x))]
 #   return(x[,!colnames(x)%in%c("seed","finished", "divergence_threshold", "n_sp_alive_t_0", "cpu_time")])
 # })
 lmodmbt <- lapply(lmodmbt, function(x){
@@ -546,23 +545,23 @@ stats <- main_stats_names[-c(4,5)]
 set_par(length(stats)*length(lt),length(lt))
 ita <<- 0
 # lapply(lt, function(x){
-# hist(x$trs.spread_temp_width)
+# hist(x$trs_spread_temp_width)
 # })
 for (stats_i in 1:length(stats)){
   
   ylimt <- range(unlist(lapply(lt, function(x){x[[stats[stats_i]]]})), na.rm=T)
-  xlimt <- range(unlist(lapply(lt, function(x){x[["trs.dispersal_50%"]]})), na.rm=T)
+  xlimt <- range(unlist(lapply(lt, function(x){x[["trs_dispersal_50%"]]})), na.rm=T)
   
 lapply(lt, function(x){
   ita <<-ita+1
   
-# plot(x$`trs.dispersal_50%`,x[[stats[stats_i]]], xlab="dispersal", ylab=stats[stats_i], cex=0.7, xlim=c(0,1), ylim=ylimt)
+# plot(x$`trs_dispersal_50%`,x[[stats[stats_i]]], xlab="dispersal", ylab=stats[stats_i], cex=0.7, xlim=c(0,1), ylim=ylimt)
   y_n <- stats[stats_i]
-  x_n <- "trs.dispersal_50%"
+  x_n <- "trs_dispersal_50%"
   plot_stat_classes_p(x, 
                       y=y_n, 
                       x=x_n, 
-                      cats="trs.competition_50%", 
+                      cats="trs_competition_50%", 
                       ylim=ylimt, 
                       xlim=xlimt,  
                       ylab=y_n,
@@ -595,23 +594,23 @@ stats <- main_stats_names[-c(4,5)]
 set_par(length(stats)*length(lt),length(lt))
 ita <<- 0
 # lapply(lt, function(x){
-# hist(x$trs.spread_temp_width)
+# hist(x$trs_spread_temp_width)
 # })
 for (stats_i in 1:length(stats)){
   
   ylimt <- range(unlist(lapply(lt, function(x){x[[stats[stats_i]]]})), na.rm=T)
-  xlimt <- range(unlist(lapply(lt, function(x){x[["trs.dispersal_50%"]]})), na.rm=T)
+  xlimt <- range(unlist(lapply(lt, function(x){x[["trs_dispersal_50%"]]})), na.rm=T)
   
 lapply(lt, function(x){
   ita <<-ita+1
   
-# plot(x$`trs.dispersal_50%`,x[[stats[stats_i]]], xlab="dispersal", ylab=stats[stats_i], cex=0.7, xlim=c(0,1), ylim=ylimt)
+# plot(x$`trs_dispersal_50%`,x[[stats[stats_i]]], xlab="dispersal", ylab=stats[stats_i], cex=0.7, xlim=c(0,1), ylim=ylimt)
   y_n <- stats[stats_i]
-  x_n <- "trs.dispersal_50%"
+  x_n <- "trs_dispersal_50%"
   plot_stat_classes_p(x, 
                       y=y_n, 
                       x=x_n, 
-                      cats="trs.competition_50%", 
+                      cats="trs_competition_50%", 
                       ylim=ylimt, 
                       xlim=xlimt,  
                       ylab=y_n,
@@ -627,6 +626,7 @@ if(ita<=length(lt)){
 
 }
 ```
+
 ### Trait Changes
 
 ```{r}
@@ -654,6 +654,10 @@ plot_stat_classes_summary(lmodmbt[[1]], stats, colbar.at = 1000)
 #|   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 plot_stat_classes_summary(lmodmbt[[2]], stats, colbar.at = 1000)
+
+
+plot_stat_classes()
+
 ```
 
 ```{r}
@@ -681,7 +685,7 @@ lt <- lapply(lt, function(x){
   x <- x[x$gamma>9,]
 })
 
-stats <- grep("trs.*_50%", names(sss$M0$stats$t), value = T)
+stats <- grep("trs_*_50%", names(sss$M0$stats$t), value = T)
 #stats <- grep("mean", stats, value = T)
 # stats <- gsub("range_spatial_sps_", "",stats)
 
@@ -690,7 +694,7 @@ stats_i <- c(4,2,3) # order of plot
 set_par(length(stats_i)*length(lt),length(stats_i))
 ita <<- 0
 # lapply(lt, function(x){
-# hist(x$trs.spread_temp_width)
+# hist(x$trs_spread_temp_width)
 # })
 for (indexi in 1:length(stats_i)){
   
@@ -712,7 +716,10 @@ if(ita<=length(lt)){
 #| label: fig-testing-of-limiting similarity
 #| fig-height: 6
 #| fig-cap: |
-#|   The theory of limiting similarity predicts that as species diversity increases, the average population size of each species decreases due to the need for coexisting species to be sufficiently different to coexist, resulting in lower population sizes when higher competition is present.
+#|  The theory of limiting similarity predicts that as species diversity 
+#|  increases, the average population size of each species decreases due to the
+#|  need for coexisting species to be sufficiently different to coexist,
+#|  resulting in lower population sizes when higher competition is present.
 
 lt <- lapply(sss, function(x){
   get_parm_stats(parms = x$parms,
@@ -725,7 +732,7 @@ lt <- lapply(lt, function(x){
 
 y_n <- "gamma"
 x_n <- "range_spatial_sps_0_mean"
-c_n <- "trs.competition_50%"
+c_n <- "trs_competition_50%"
 yliml <- range(unlist(lapply(lt, function(x){x[y_n]})), na.rm=T)
 xliml <- range(unlist(lapply(lt, function(x){x[x_n]})), na.rm=T)
 set_par(length(lt),length(lt))
@@ -756,15 +763,19 @@ lt <- lapply(sss, function(x){
 })
 
 lt <- lapply(lt, function(x){
-  x <- x[x$gamma>3,]
+  x <- x[x$gamma>=20,]
 })
 
 set_par(length(lt)*2,length(lt))
 
+
+
+
 y_n <- "speciations_perc"
 x_n <- "extinctions_perc"
-c_n <- "trs.competition_50%"
+c_n <- "trs_competition_50%"
 yliml <- range(unlist(lapply(lt, function(x){x[y_n]})), na.rm=T)
+#yliml[1] <- 0.85
 xliml <- range(unlist(lapply(lt, function(x){x[x_n]})), na.rm=T)
 #yliml <- range(c(yliml, xliml))
 #xliml <- yliml
@@ -773,20 +784,26 @@ ita <<-0
 lapply(lt, function(x){
   ita <<-ita+1
   plot_stat_classes_p(x, y=y_n, x=x_n, cats=c_n, ylim=yliml, xlim=xliml,  ylab=y_n,
+                      cex_p=0.5+x$`trs_dispersal_50%`,
+                      pch_p=1,
                       xlab=x_n,
                       plt_type=if(ita==1){"colbar"}else{"NULL"}, yposbar = mean(yliml))
   title(names(lt)[ita])
   title(LETTERS[ita], adj=0)
+  abline(h=1)
+  abline
 })
 y_n <- "speciations_invar"
 x_n <- "extinction_invar"
-c_n <- "trs.competition_50%"
+c_n <- "trs_competition_50%"
 yliml <- range(unlist(lapply(lt, function(x){x[y_n]})), na.rm=T)
 xliml <- range(unlist(lapply(lt, function(x){x[x_n]})), na.rm=T)
 
 lapply(lt, function(x){
   ita <<-ita+1
-  plot_stat_classes_p(x, y=y_n, x=x_n, cats=c_n, ylim=yliml, xlim=xliml,  ylab=y_n,
+  plot_stat_classes_p(x, y=y_n, x=x_n, cats=c_n, ylim=yliml, xlim=xliml,  ylab=y_n, 
+                      cex_p=x$`trs_dispersal_50%`,
+                      pch_p=1,
                       xlab=x_n,
                       plt_type=if(ita==length(lt)){"colbar"}else{"NULL"}, yposbar = 0.9*yliml[2])
   title(names(lt)[ita])

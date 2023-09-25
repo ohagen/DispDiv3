@@ -29,17 +29,24 @@ addTrans <- function(color,trans)
 }
 
 plot_stat_classes <- function(mbt, cats="competition", y="gamma", x="dispersal", 
-                              plt_type="colbar", ylab=NULL, plotblank=FALSE, ...){
+                              plt_type="colbar", ylab=NULL, xlab=NULL, plotblank=FALSE,
+                              ylim=NULL, ...){
   # plt type is either legend or colbar. If anything else, no leggend/bar is added
   if (is.null(ylab)){
     xlabis=x
     ylabis=y
   } else {
-    xlabis=x
+    xlabis=xlab
     ylabis=ylab
   }
+  if (is.null(ylim)){
+    ylimbis <- range(mbt[,y], na.rm=T)
+  } else {
+    ylimbis <- ylim
+  }
+  
   plot(NULL, xlab=xlabis, ylab=ylabis,
-       xlim=range(mbt[,x], na.rm=T), ylim=range(mbt[,y], na.rm=T), bty ="n")#, ...)
+       xlim=range(mbt[,x], na.rm=T), ylim=ylimbis, bty ="n")#, ...)
   
   classes <- unique(mbt[,cats])
   n_classes <- length(classes)
@@ -86,14 +93,15 @@ plot_time_y <- function(mbtt, time=as.character(500:0), y="gamma", x="divergence
 
 
 
-plot_trait_phylogeny <- function(traitsdf=df, trait="competition"){
-  
+plot_trait_phylogeny <- function(traitsdf=df, trait="competition", type="absolute"){
+
+  # type can be absolute or relative
   traitsdf <- traitsdf[, grep(trait,colnames(traitsdf))]
   tts <- as.numeric(rownames(traitsdf))
   tts_seq_index <- 1:length(tts)
   nspp <- ncol(traitsdf)
   #ylim=range(traitsdf, na.rm=T)
-  plot(tts,  ylim=c(0,1), col=rgb(0,0,0,1), xaxt='n', pch = '', xlab="Ma", ylab=trait, 
+  plot(tts,  ylim=if(type=="absolute"){c(0,1)}else{range(traitsdf, na.rm = T)}, col=rgb(0,0,0,1), xaxt='n', pch = '', xlab="Ma", ylab=trait, 
        main="Trait evolution")
   axis_lab <- seq(from = 1, to = length(traitsdf[,1]), by = 50)
   axis(1, at = axis_lab, 
@@ -144,15 +152,17 @@ plot_stat_classes_p <- function(mbt=lt[[3]],
                                 plt_type=NULL,
                                 xposbar=NULL,
                                 yposbar=NULL,
+                                cex_p=0.5,
+                                pch_p=16,
                                 ...){
   classes <- unique(mbt[,cats])
   n_classes <- length(classes)
   cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes))
   #mycol <- colorRampPalette(c("#f72585", "#b5179e", "#3a0ca3", "#4cc9f0" ))
   #cols <- mycol(n_classes)
-  plot(x=mbt[,x],y=mbt[,y], col=cols[as.factor(mbt[,cats])], bty ="n", pch=16, cex=0.5, ...)
+  plot(x=mbt[,x],y=mbt[,y], col=cols[as.factor(mbt[,cats])], bty ="n", pch=pch_p, cex=cex_p, ...)
   if (plt_type=="legend"){
-    legend("topleft", legend = classes, col=cols, pch=3, bty="n")
+    legend("topleft", legend = classes, col=cols, pch=pch_p, bty="n")
   } else if (plt_type=="colbar"){
     ypos1 <- if (is.null(yposbar)){0.8*max(mbt[,y])}else{yposbar}
     ypos2 <- ypos1-0.08*ypos1
@@ -170,3 +180,20 @@ plot_stat_classes_p <- function(mbt=lt[[3]],
   }
 }
 
+stats_symbol_lib <- list(
+  "log10_mean_aplha"= bquote(log[10](bar(alpha))),
+  "trs_dispersal_50%"=expression("Mean Dispersal  ("~bar("d"['t'['0']])~")"),
+  "mtx_MNTD_S_T"="mtx_MNTD_S_T",
+  "mtx_beta_prop_T"= expression(beta~'%'),
+  "gamma"=  expression(gamma),
+  "mtx_zeta_T"=  expression("Zeta "~zeta),
+  "mtx_eta_T"=  expression("Eta "~eta), 
+  "mtx_MNTD_S_T"=  expression('MNTD'['S']),
+  "speciations_perc"=  "Speciation %",
+  "extinctions_perc"=   "Extinction %",
+  "mean_abd_50%"=   bquote(bar(B)),
+  "mean_range"= bquote(bar(range)~Km^2),
+  "change_prop"=  "Range change %",
+  "maxlik_betasplit_TF"=expression(beta['max split']~"Total"),
+  "maxlik_betasplit_TF"=expression(beta['max split']~"Total"),
+  "func_FDiv_D"=expression('F'['unc']~'D'['iv']~" D"))

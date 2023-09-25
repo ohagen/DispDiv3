@@ -54,6 +54,24 @@ failed <- lapply(sss, function(x){
 set_par(length(failed),1)
 lapply(failed, lollipoPlot)
 
+
+# load fg
+fg <- function(x,a,b,c,ns=1){
+  a <- a/c
+  v <- a*exp(-((x-b)^2/(2*c^2)))
+  return(v)
+}
+
+###### fig pre
+# load config eco:
+plot(fg(seq(0,1,0.01), a=1, b=0.23,c=0.04), type="l", lwd=2, lty=1)
+lines(fg(seq(0,1,0.01), a=1, b=0.6,c=0.1), lwd=2, lty=2)
+hist(rweibull(10000, shape = 2, scale = 30), lty=1, col=rev(gen3sis:::color_richness(10))[1], freq=T, breaks = 80)
+hist(rweibull(10000, shape = 2, scale = 10), lty=2, col=rev(gen3sis:::color_richness(10))[9], freq=T)  #from 1 to 50)
+
+
+
+
 #### FIGURE 1 PATTERNS ############
 mbt <- get_parm_stats(parms = sss[[1]]$parms, stat = cbind(sss[[1]]$stats$t,sss[[1]]$stats$tt$Total ))
 change <- mbt$`range_spatial_sps_+1_mean`-mbt$`range_spatial_sps_-1_mean`
@@ -61,13 +79,13 @@ mbt$mean_range <- change+mbt$`range_spatial_sps_0_mean`
 mbt$change_prop <- change/mbt$`range_spatial_sps_0_mean`
 mbt$log10_mean_aplha <- log(mbt$mtx_mean_alpha_T, base=10)
 
-f1_stats_names <- c(#"log10_mean_aplha",  
-                    #"mtx_beta_w_T",
-                    "gamma"
+f1_stats_names <- c("log10_mean_aplha",  
+                    "mtx_beta_w_T",
+                    "gamma",
                     #"mtx_eta_T",
                     #"maxlik_betasplit_.TF", 
                     #"mtx_MPD_S_T"
-                    #"mtx_MNTD_S_T"
+                    "mtx_MNTD_S_T"
 )#
 f1_pross_names <- c("speciations_perc",
                     "extinctions_perc"
@@ -83,46 +101,54 @@ n_stats <- length(pnames)
 mask_mbt <- mbt$n_sp_alive_t_0>=3
 lp <- mbt[mask_mbt,c("dispersal", "competition", pnames)]
 
+# M2 tradeoff
+m1T <- get_parm_stats(parms = sss$M1$parms, stat = cbind(sss$M1$stats$t,sss$M1$stats$tt$Total ))
+mask_opt_spacem1T <- get_optima_space_mask(m1T)
+ordm1T <- order(m1T[mask_opt_spacem1T,'trs_dispersal_50%'])
+
+# M2 tradeoff
+m2 <- get_parm_stats(parms = sss$M2$parms, stat = cbind(sss$M2$stats$t,sss$M2$stats$tt$Total ))
+mask_opt_space <- get_optima_space_mask(m2)
+ord <- order(m2[mask_opt_space,'trs_dispersal_50%'])
+
+
 
 # plot_stat_classes_summary(lp, stats_names = pnames)
 
 {
-  pdf(file.path(pls$dir_out, "f1_1_v2.pdf"), width = 6.5, height = 4.5)
-  set_par(2, 1)
+  pdf(file.path(pls$dir_out, "f1_1_v3.pdf"), width = 6.5, height = 6)
+  set_par(3, 1)
   for (stat_i in 1:n_stats){
-    # stat_i <- 2
+    # stat_i <- 1
     # stat_i <- 3
-    if (stat_i==1){
+
       plot_stat_classes(lp, cats="competition", y=pnames[stat_i], x="dispersal", 
                       plt_type="FALSE", 
-                      ylab=stats_symbol_lib[[pnames[stat_i]]])
-      title(LETTERS[stat_i], adj=0)
-    }else if (stat_i==2){
-      plot_stat_classes(lp, cats="competition", y=pnames[stat_i], x="dispersal", 
-                        plt_type="FALSE", 
-                        ylab="Macro-events %", plotblank = TRUE)
-      title(LETTERS[stat_i], adj=0)
-      cats="competition"
-      classes <- unique(lp[,cats])
-      n_classes <- length(classes)
-      # mycol <- colorRampPalette(c("#f72585", "#b5179e", "#3a0ca3", "#4cc9f0" ))
-      cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes)) # mycol(n_classes) #
-      for (c_i in 1:n_classes){
-        #c_i <- 1
-        selection <- lp[,cats]==classes[c_i]
-        lines(x=lp[selection,"dispersal"],y=lp[selection,pnames[stat_i]], col=cols[c_i], pch=3, cex=0.7, type="b")
-      }
+                      xlab=if (stat_i==n_stats){"Dispersal (d)"}else{" "},
+                      ylab=stats_symbol_lib[[pnames[stat_i]]],
+                      ylim=if(pnames[stat_i]=="extinctions_perc"){c(0,0.18)}else{NULL})
+    
       
-      legend(x=0.024,y=0.95, border=FALSE, legend=c("Speciation", "Extinction"), bty="n", pch=c(3, 4))
-      
-    }else{
-      
-      for (c_i in 1:n_classes){
-        #c_i <- 1
-        selection <- lp[,cats]==classes[c_i]
-        lines(x=lp[selection,"dispersal"],y=lp[selection,pnames[stat_i]], col=cols[c_i], pch=4, cex=0.7, type="b")
-      }
-    }
+    # add ablines and title
+    abline(v=unlist(patches$disprange), lwd=3, lty=1, col="grey")
+    title(LETTERS[stat_i], adj=0) 
+      # PLOT M0T
+    mask_opt_space0T <- get_optima_space_mask(mbt)
+    ord0T <- order(mbt[mask_opt_space0T,'trs_dispersal_50%'])
+    smoothingSpline0T <- smooth.spline(y=mbt[mask_opt_space0T, pnames[stat_i]][ord0T],
+                                     x=mbt[mask_opt_space0T,'trs_dispersal_50%'][ord0T])
+    lines(smoothingSpline0T, lwd=2, lty=3)
+    #   # PLOT M1T
+    # smoothingSplinem1T <- smooth.spline(y=m1T[mask_opt_spacem1T, pnames[stat_i]][ordm1T],
+    #                                  x=m1T[mask_opt_spacem1T,'trs_dispersal_50%'][ordm1T])
+    # lines(smoothingSplinem1T, lwd=2, lty=6)
+      #print(table(mask_opt_space))
+    
+    smoothingSpline <- smooth.spline(y=m2[mask_opt_space, pnames[stat_i]][ord],
+                                     x=m2[mask_opt_space,'trs_dispersal_50%'][ord])
+    lines(smoothingSpline, lwd=2, lty=1)
+
+
     
     
     if (stat_i==1){ # plot colbar
@@ -130,22 +156,24 @@ lp <- mbt[mask_mbt,c("dispersal", "competition", pnames)]
       n_classes <- length(classes)
       cols <- rev(gen3sis::color_richness_non_CVDCBP(n_classes))
       ypos1 <- max(mbt[,f1_stats_names[stat_i]], na.rm=T)
-      
-      
+
+
       width_colbar <- 0.08
       length_colbar <- 0.8
       ypos3 <- ypos1-width_colbar
       xpos <- 0.2
-      colorbar.plot(x=xpos, y=mean(c(ypos1, ypos3)), strip=1:n_classes, col = cols, 
+      colorbar.plot(x=xpos, y=mean(c(ypos1, ypos3)), strip=1:n_classes, col = cols,
                     strip.width=width_colbar, strip.length=length_colbar,
                     horizontal = TRUE, adj.y=0.5)
       text(x=xpos, y=ypos1, labels = "Competition (l)")
-      text(x=xpos-0.1, y=ypos3, labels = "0.9 \n *")
-      text(x=xpos+0.1, y=ypos3, labels = "1 \n neutral", adj=0)
-      
+      text(x=xpos-0.1, y=ypos3, labels = "0.9; aff=0.1\n *")
+      text(x=xpos+0.1, y=ypos3, labels = "1; aff=0 \n **", adj=0)
+
+      legend("topleft", title="Trade-off optima", legend=c("M0T", "M1T"),lty=c(3,1), lwd=c(2,2), bty = "n")
+
     }
     #if (stat_i==2){
-    abline(v=unlist(patches$disprange), lty=3, col="grey", lwd=2)
+    
     #}
     
   }
@@ -163,7 +191,7 @@ n_dispr <- length(disprange)
 lvals <- list()
 # set_par(3,1)
 for (disprange_i in 1:n_dispr) {
-  # disprange_i <- 1
+  # disprange_i <- 3
   # print(disprange_i)
   temp_mbt <-mbt[mbt["dispersal"]>=disprange[[disprange_i]][1]&mbt["dispersal"]<disprange[[disprange_i]][2],c("gamma", stats_names)]
   gamma<-temp_mbt$gamma
@@ -186,8 +214,8 @@ for (disprange_i in 1:n_dispr) {
   mtbar <- barplot(c(pw,pb), col=patches$colors, ylim=c(0,0.5), ylab="Speciation events %", border=NA, names="")
   lines(y=rep(-0.00,2), x=c(0.5,4.5), col="grey50", lwd=2)
   lines(y=rep(-0.00,2), x=c(5,9.5), col="grey50", lwd=2)
-  text(y=rep(-.015,2),x=c(2.5,7), c("Within", "Between"), outter=T, adj=0.5,xpd=NA)
-  text(mtbar, c(pw,pb)+0.015, rep(patches$names, 2), adj=0.5,xpd=NA)
+  text(y=rep(-.025,2),x=c(2.5,7), c("Within", "Between"), outter=T, adj=0.5,xpd=NA, cex=3)
+  text(mtbar, c(pw,pb)+0.025, rep(patches$names, 2), adj=0.5,xpd=NA, cex=3)
   dev.off()
 }
 
@@ -208,26 +236,27 @@ mbtl <- lapply(sss, function(x){
   mbt$log10_mean_aplha <- log(mbt$mtx_mean_alpha_T, base=10)
   return(mbt)
 })
+names(mbtl)[3] <- "M1T"
 
 f2_stats_names <- c("gamma",
-                    "mtx_beta_prop_T",
+                    "mtx_beta_prop_T"
                     # "log10_mean_aplha",
-                    "mtx_eta_T",
+                    #"mtx_eta_T",
                     #"maxlik_betasplit_TF", 
                     #"mtx_MPD_S_T"
-                    "mtx_MNTD_S_T"
+                    # "mtx_MNTD_S_T"
 )#
-f2_pross_names <- c("speciations_perc",
-                    "extinctions_perc",
+f2_pross_names <- c(#"speciations_perc",
+                    #"extinctions_perc",
                     "mean_abd_50%",  
                     "mean_range",
                     "change_prop")
-pnames<-c(f2_stats_names)#, f2_pross_names)
+pnames<-c(f2_stats_names, f2_pross_names)
 pnames<-c(f2_pross_names)
 n_stats<-length(pnames)
 
 pdf(file.path(pls$dir_out, "f2_1.pdf"), width = 6, height = 5.5)
-set_par(round(n_stats*3,0), length(mbtl))
+set_par(round(n_stats*2,0), length(mbtl))
 ita<<-0
 for (stat_i in 1:n_stats){
   # stat_i<-1
@@ -313,7 +342,8 @@ lapply(lt, function(x){
                       pch_p=1,
                       xlab=stats_symbol_lib[[x_n]],
                       plt_type=if(ita==1){"colbar"}else{"NULL"}, 
-                      yposbar = mean(yliml)+0.03)
+                      yposbar = mean(yliml)+0.03,
+                      xposbar = 0.1)
   title(names(lt)[ita])
   title(LETTERS[ita], adj=0)
   lines(y=c(1,1), x=c(0,0.6), col="grey")

@@ -7,7 +7,6 @@
 ## Author: Oskar Hagen (oskar@hagen.bio)
 ##=======================================================================##
 
-
 library(here)
 library(fields)
 library(RRphylo)

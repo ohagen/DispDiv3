@@ -110,14 +110,23 @@ ssltt <- lapply(ssltt, function(x){
 time_stamp <- format(Sys.time(), "%Y%m%d_%H%M")
 saveRDS(ssltt, paste0("./3_summary/", time_stamp,"_tt_", expp,".rds"))
 
+## WIP ###
+ssltt <- list(readRDS("C:/temp/dispdiv3/outputs_eve/selection_500t/ss_t_500-0_M2_1119.rds")) # resonable
+ssltt <- list(readRDS("C:/temp/dispdiv3/outputs_eve/selection_500t/ss_t_500-0_M1_1119.rds")) # resonable
+outputs <- c("M0_1119.zip", "M1_1119.zip", "M2_1119.zip")
+
+gen3sis::plot_summary(read_zip("sgen3sis.rds",zf=outputs[1], i="C:/temp/dispdiv3/outputs_eve/selection_500t"))
+
+# ssltt <- list(readRDS("C:/temp/dispdiv3/outputs_eve/selection_500t/ss_t_500-0_M2_1714.rds")) # this one starts with a very low
+#### END WIP
 
 
 
 # plot!
 for (o_i in 1:n_outs){
-par(mfrow=c(2,2))
+par(mfrow=c(4,1))
   for (trt_i in c("dispersal", "competition", "mean_temp", "temp_width")){
-    plot_trait_phylogeny(ssltt[[o_i]][[2]],trait =trt_i)
+    plot_trait_phylogeny(ssltt[[o_i]][[2]],trait =trt_i, type="ass")
   }
 }
 

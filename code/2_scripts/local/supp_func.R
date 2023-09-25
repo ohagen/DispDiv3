@@ -91,7 +91,11 @@ plot_stat_classes_summary <- function(mbt, stats_names, colbar.at=1, limit_val=3
       mask_mbt <- mbt[limit_stat]>=limit_val
     }
     
-    plot_stat_classes(mbt[mask_mbt,], cats="competition", y=stats_names[stat_i], x="dispersal", plt_type="FALSE")
+    plot_stat_classes(mbt[mask_mbt,], cats="competition", y=stats_names[stat_i], 
+                      x="dispersal",
+                      xlab=if(stat_i>=(n_stats-1)){"Dispersal (d)"}else{""},
+                      ylab=stats_symbol_lib[[stats_names[stat_i]]],
+                      plt_type="FALSE")
     title(LETTERS[stat_i], adj=0)
     #add_to_plot_topleft(LETTERS[stat_i])
     if (stat_i==colbar.at){ # plot colbar
@@ -119,6 +123,34 @@ plot_stat_classes_summary <- function(mbt, stats_names, colbar.at=1, limit_val=3
   }
 }
 
+
+
+
+get_optima_space_mask <- function(traits){
+  #get mask of traits that are within optima region
+  cd <- traits[,c("trs_dispersal_50%", "trs_competition_50%")]
+  # dispersal values on trade-off linear function. e.g. lines(x=c(0,1), y=c(0.9,1))
+  dsurf <- -10*cd[,"trs_competition_50%"]+10
+  csurf <- (10-cd[,"trs_dispersal_50%"])/10
+  Dy <- cd[,"trs_dispersal_50%"]-dsurf
+  # dispersal value at optima space
+  dsubopt <- -10*cd[,"trs_competition_50%"]+9
+  csubopt <- (9-cd[,"trs_dispersal_50%"])/10
+  Dysubopt <- cd[,"trs_dispersal_50%"]-dsubopt
+  
+  
+  # Dx <- cd[,"competition"]-csurf
+  # get traits above and to the right of this linear function
+  above_surface_mask <- Dy>0
+  above_sbopt_mask <- Dysubopt>0.9
+  
+  optima_space_mask <- !above_surface_mask&above_sbopt_mask
+  
+  #plot(cd)
+  #points(cd[optima_space_mask,], col="yellow", pch=18, cex=2)
+  
+  return(optima_space_mask)
+}
 
 
 

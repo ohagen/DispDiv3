@@ -36,7 +36,7 @@
     ft <- as.data.frame(ps[1,,drop=F])
     # lt is the last time, meaning first row of the ps table
     lt <- as.data.frame(ps[nrow(ps),,drop=F])
-    # val is the percentage of extinction events 
+    # val is the percentage of speciation events 
     val <- round((( lt$"total"- ft$"total")/ lt$"total"),3)
     return(val)
   }
