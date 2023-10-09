@@ -47,16 +47,19 @@ plot_exp <- function(abt, epx, ...){
 # this functions scales the abundance and with ns, meaning, a higher ns means a stricter niche strength,
 # with ns=0 as no niche selection at all
 
-fg <- function(x,a,b,c,ns=1){
+fg <- function(x,a=1,b,c){
   #### BROWSER ! ----------
   # browser()
   a <- a/c
-  c <- c/ns # scale width for larg ns... ns<<<0.0001 ns lim to zero aproxes a straight line
   v <- a*exp(-((x-b)^2/(2*c^2)))
   return(v)
 }
-plot(fg(x=0.5, a=1, b=seq(0,1,0.05), c=.1), type='l', xaxt="n", ylab = "Environmental fitness") 
+plot(fg(x=0.5, b=seq(0,1,0.05), c=.1), type='l', xaxt="n", col="#8B0000", lwd=2,
+     ylab = "Environmental fitness", xlab="Temperature in Celcius")
+lines(fg(x=0.5, b=seq(0,1,0.05), c=.25), col="#41BB71", lwd=2)
+lines(fg(x=0.4, b=seq(0,1,0.05), c=.2), col="#423A81", lwd=2)
 axis(1, at=1:length(seq(0,1,0.05)), labels=seq(9,26,length.out=length(seq(0,1,0.05)) ))
+legend("topleft", legend = c("Species X", "Species Y", "Species Z"), lwd=2, col=c("#8B0000","#41BB71","#423A81"), bty='n')
 
 
 s_e_f_tt <- function(abundance, traits, landscape, ss_eff_i=ss_eff){
@@ -189,7 +192,7 @@ t_l <- list("mean_temp"=c(.5,.5,.5,rep(.6,es)),
             "competition_c"=c(0.8,0.8,0.8, rep(0.8,es)), 
             "competition_l"=c(1,1,1,rep(1,es)))
 l_l <- list("min_temp"=0.43, "max_temp"=0.54)
-abundance <- c(1, 1, 1)
+abundance <- c(0.05, 0.05, 0.05)
 names(abundance) <- 1:(es+3)
 epx <- set_exp(abundance, t_l, l_l, t_s=1:30)
 out <- run_exp(epx, ss_eff)

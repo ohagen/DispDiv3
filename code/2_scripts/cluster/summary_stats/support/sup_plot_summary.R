@@ -93,7 +93,7 @@ plot_time_y <- function(mbtt, time=as.character(500:0), y="gamma", x="divergence
 
 
 
-plot_trait_phylogeny <- function(traitsdf=df, trait="competition", type="absolute"){
+plot_trait_phylogeny <- function(traitsdf=df, trait="competition", type="absolute", maint=""){
 
   # type can be absolute or relative
   traitsdf <- traitsdf[, grep(trait,colnames(traitsdf))]
@@ -102,7 +102,7 @@ plot_trait_phylogeny <- function(traitsdf=df, trait="competition", type="absolut
   nspp <- ncol(traitsdf)
   #ylim=range(traitsdf, na.rm=T)
   plot(tts,  ylim=if(type=="absolute"){c(0,1)}else{range(traitsdf, na.rm = T)}, col=rgb(0,0,0,1), xaxt='n', pch = '', xlab="Ma", ylab=trait, 
-       main="Trait evolution")
+       main=maint)
   axis_lab <- seq(from = 1, to = length(traitsdf[,1]), by = 50)
   axis(1, at = axis_lab, 
        labels = round((tts[axis_lab]/100),2))
@@ -148,7 +148,7 @@ plot_space_changes <- function(space=ssltt[[1]]$spatial_sps$`+1`,  na.val=0, ...
 plot_stat_classes_p <- function(mbt=lt[[3]], 
                                 y = "gamma", 
                                 x="range_spatial_sps_0_mean",
-                                cats="trs.competition_50%", 
+                                cats="trs_competition_50%", 
                                 plt_type=NULL,
                                 xposbar=NULL,
                                 yposbar=NULL,

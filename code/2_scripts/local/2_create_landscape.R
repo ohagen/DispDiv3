@@ -8,10 +8,11 @@
 ##=======================================================================##
 library(gen3sis)
 
-source("./code/2_scripts/source.R") # includes pls list
+source("../source.R") # includes pls list
 
 # load
 env_vars <- readRDS(pls$env_vars)
+env_vars <- readRDS("./../../1_gen3sis_formalization/space/env_vars.rds")
 # to get time formated
 sc <- read.csv(pls$sea_level)
 

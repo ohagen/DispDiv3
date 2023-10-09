@@ -102,6 +102,16 @@
     return(qabd)
   }
   
+  lsstats$"mean_PD_alpha" <- function(occst=temp_occ_tx, phylo=temp_phy){
+    colnames(occst) <- paste0("species",colnames(occst))
+    prunedphy <- prune.sample(occst, phylo) # just to make sure! Should allways hold
+    pd_estimate <- picante::pd(occst, prunedphy, include.root = FALSE)[,"PD"]
+    return(mean(pd_estimate))
+  }
+  
+  
+  
+  
   lsstats$"mtx" <- function(sg=temp_sgen3sis, phylo=temp_phy, occst=temp_occ_tx, lc=temp_l, tx=temp_t_i){
     # multiple stats here that are , returning a variable large vector of summary statistics
     # remove x y coordinates

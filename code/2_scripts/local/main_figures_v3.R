@@ -73,84 +73,83 @@ hist(rweibull(10000, shape = 2, scale = 10), lty=2, col=rev(gen3sis:::color_rich
 
 
 #### FIGURE 1 PATTERNS ############
-mbt <- get_parm_stats(parms = sss[[1]]$parms, stat = cbind(sss[[1]]$stats$t,sss[[1]]$stats$tt$Total ))
-change <- mbt$`range_spatial_sps_+1_mean`-mbt$`range_spatial_sps_-1_mean`
-mbt$mean_range <- change+mbt$`range_spatial_sps_0_mean`
-mbt$change_prop <- change/mbt$`range_spatial_sps_0_mean`
-mbt$log10_mean_aplha <- log(mbt$mtx_mean_alpha_T, base=10)
+lmbt <- lapply(sss, function(x){
+  mbt <- get_parm_stats(parms = x$parms, stat = cbind(x$stats$t,x$stats$tt$Total))
+  change <- mbt$`range_spatial_sps_+1_mean`-mbt$`range_spatial_sps_-1_mean`
+  mbt$mean_range <- change+mbt$`range_spatial_sps_0_mean`
+  mbt$change_prop <- change/mbt$`range_spatial_sps_0_mean`
+  mbt$log10_mean_aplha <- log(mbt$mtx_mean_alpha_T, base=10)
+  mbt$log10_mean_PD_aplha <- log(mbt$mean_PD_alpha, base=10)
+  return(mbt)
+})
+lopt <- lapply(sss, function(x){
+  mbt <- get_parm_stats(parms = x$parms, stat = cbind(x$stats$t,x$stats$tt$Total))
+  mask_opt_space <- get_optima_space_mask(mbt)
+  ordm <- order(mbt[mask_opt_space,'trs_dispersal_50%'])
+  return(list("mask_opt_space"=mask_opt_space, "ordm"=ordm))
+})
 
-f1_stats_names <- c("log10_mean_aplha",  
-                    "mtx_beta_w_T",
-                    "gamma",
+
+stats_names <- c("gamma", 
+                    "mtx_beta_prop_T",
+                 "log10_mean_aplha",
                     #"mtx_eta_T",
                     #"maxlik_betasplit_.TF", 
-                    #"mtx_MPD_S_T"
-                    "mtx_MNTD_S_T"
-)#
-f1_pross_names <- c("speciations_perc",
+                    "log10_mean_PD_aplha",
+                    "speciations_perc",
                     "extinctions_perc"
                     #"mean_abd_50%",  
-                    #"mean_range"
+                    
                     #"change_prop"
-)#
+)
 
-pnames <- c(f1_stats_names, f1_pross_names)
+pnames <- stats_names
 n_stats <- length(pnames)
 
 
-mask_mbt <- mbt$n_sp_alive_t_0>=3
-lp <- mbt[mask_mbt,c("dispersal", "competition", pnames)]
-
-# M2 tradeoff
-m1T <- get_parm_stats(parms = sss$M1$parms, stat = cbind(sss$M1$stats$t,sss$M1$stats$tt$Total ))
-mask_opt_spacem1T <- get_optima_space_mask(m1T)
-ordm1T <- order(m1T[mask_opt_spacem1T,'trs_dispersal_50%'])
-
-# M2 tradeoff
-m2 <- get_parm_stats(parms = sss$M2$parms, stat = cbind(sss$M2$stats$t,sss$M2$stats$tt$Total ))
-mask_opt_space <- get_optima_space_mask(m2)
-ord <- order(m2[mask_opt_space,'trs_dispersal_50%'])
+# mask_mbt <- mbt$n_sp_alive_t_0>=3
+# lp <- mbt[mask_mbt,c("dispersal", "competition", pnames)]
+# 
+# # M2 tradeoff
+# m1T <- get_parm_stats(parms = sss$M1$parms, stat = cbind(sss$M1$stats$t,sss$M1$stats$tt$Total ))
+# mask_opt_spacem1T <- get_optima_space_mask(m1T)
+# ordm1T <- order(m1T[mask_opt_spacem1T,'trs_dispersal_50%'])
+# 
+# # M2 tradeoff
+# m2 <- get_parm_stats(parms = sss$M2$parms, stat = cbind(sss$M2$stats$t,sss$M2$stats$tt$Total ))
+# mask_opt_space <- get_optima_space_mask(m2)
+# ord <- order(m2[mask_opt_space,'trs_dispersal_50%'])
 
 
 
 # plot_stat_classes_summary(lp, stats_names = pnames)
 
 {
-  pdf(file.path(pls$dir_out, "f1_1_v3.pdf"), width = 6.5, height = 6)
-  set_par(3, 1)
+  pdf(file.path(pls$dir_out, "f1_1_v5.pdf"), width = 6.5, height = 6.5)
+  set_par(8, 2)
   for (stat_i in 1:n_stats){
     # stat_i <- 1
     # stat_i <- 3
 
-      plot_stat_classes(lp, cats="competition", y=pnames[stat_i], x="dispersal", 
+      plot_stat_classes(lmbt$M0, cats="competition", y=pnames[stat_i], x="dispersal", 
                       plt_type="FALSE", 
                       xlab=if (stat_i==n_stats){"Dispersal (d)"}else{" "},
-                      ylab=stats_symbol_lib[[pnames[stat_i]]],
-                      ylim=if(pnames[stat_i]=="extinctions_perc"){c(0,0.18)}else{NULL})
+                      ylab=stats_symbol_lib[[pnames[stat_i]]])
+                      #ylim=if(pnames[stat_i]=="extinctions_perc"){c(0,0.18)}else{NULL})
     
       
     # add ablines and title
     abline(v=unlist(patches$disprange), lwd=3, lty=1, col="grey")
     title(LETTERS[stat_i], adj=0) 
+    ltys <- c(3,2,1)
       # PLOT M0T
-    mask_opt_space0T <- get_optima_space_mask(mbt)
-    ord0T <- order(mbt[mask_opt_space0T,'trs_dispersal_50%'])
-    smoothingSpline0T <- smooth.spline(y=mbt[mask_opt_space0T, pnames[stat_i]][ord0T],
-                                     x=mbt[mask_opt_space0T,'trs_dispersal_50%'][ord0T])
-    lines(smoothingSpline0T, lwd=2, lty=3)
-    #   # PLOT M1T
-    # smoothingSplinem1T <- smooth.spline(y=m1T[mask_opt_spacem1T, pnames[stat_i]][ordm1T],
-    #                                  x=m1T[mask_opt_spacem1T,'trs_dispersal_50%'][ordm1T])
-    # lines(smoothingSplinem1T, lwd=2, lty=6)
-      #print(table(mask_opt_space))
+    for (i in 1:length(lopt)){
+      smoothingSpline <- smooth.spline(y=lmbt[[i]][lopt[[i]]$mask_opt_space, pnames[stat_i]][lopt[[i]]$ordm],
+                                         x=lmbt[[i]][lopt[[i]]$mask_opt_space, 'trs_dispersal_50%'][lopt[[i]]$ordm])
+      lines(smoothingSpline, lwd=1.8, lty=ltys[i])
+    }
     
-    smoothingSpline <- smooth.spline(y=m2[mask_opt_space, pnames[stat_i]][ord],
-                                     x=m2[mask_opt_space,'trs_dispersal_50%'][ord])
-    lines(smoothingSpline, lwd=2, lty=1)
-
-
-    
-    
+   
     if (stat_i==1){ # plot colbar
       classes <- unique(mbt[,"competition"])
       n_classes <- length(classes)
@@ -169,7 +168,7 @@ ord <- order(m2[mask_opt_space,'trs_dispersal_50%'])
       text(x=xpos-0.1, y=ypos3, labels = "0.9; aff=0.1\n *")
       text(x=xpos+0.1, y=ypos3, labels = "1; aff=0 \n **", adj=0)
 
-      legend("topleft", title="Trade-off optima", legend=c("M0T", "M1T"),lty=c(3,1), lwd=c(2,2), bty = "n")
+      legend("topleft", title="Trade-off optima", legend=c("M0", "ME", "MET"),lty=ltys, lwd=c(2,2), bty = "n")
 
     }
     #if (stat_i==2){

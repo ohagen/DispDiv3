@@ -48,7 +48,7 @@ call_stats_zip <- function(zf, i=output_dir, l=landscape, o=dir_summaries, verbo
     temp_traits_tx <<- read_zip(what="traits/traits_t_x.rds", zf, i=i, ti=t_i)
   } else { # we return a list
     ssname <- paste0("t_", paste0(c(t_i[1],t_i[n_ts]), collapse = "-"))
-    runF <- lsstatstt # specify here the dunctions to be run
+    runF <- lsstatstt # specify here the functions to be run
     temp_occ_tx <<- list()
     temp_abundance_tx <<- list()
     temp_traits_tx <<- list()
