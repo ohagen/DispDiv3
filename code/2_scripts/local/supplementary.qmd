@@ -18,6 +18,7 @@ bibliography: references.bib
 
 ```{r}
 #| label: load-libs and data
+extrafont::loadfonts(quiet = TRUE)
 library(here)
 library(fields)
 library(RRphylo)
@@ -60,7 +61,7 @@ names(sss) <- c("M0", "ME", "MET")
 
 # Environment
 
-We simulate 5 Myrs of environmental dynamics of four patches (i.e. A, B, C and D), inspired by a theoretical but realistic isolated island system placed in the South. The total area is 60X60 Km^2^, with site area is 1 Km^2^ , time-step is 10'000 years, and 501 time-steps=(Animation 1). We consider dynamic topography, minimum temperature, and maximum temperature, combined with sea level changes which intensify during the Quaternary (\~last 2.6 Ma), and happened in a periodicity of 100 ky (i.e. 10 time steps) [@pillans1998].  This approximates Earth's eccentricity with a conservative periodicity [@shepard2018] and reflects interactions among global climate dynamics and changes in incoming solar radiation, likely influencing ecological and evolutionary patterns. We approximate empirical mean temperature and sea levels [@westerhold2020; @hoffmann2011]. Our dynamic temperature oscillates at similar periodicity and temporal intensity, so that lower temperature periods match periods of lowest sea levels (*Figure 1 Main,* @fig-envir-temp). Given the random attribute location on Earth, i.e. Southern Hemisphere, the south sides of each patch were 2℃ colder than the northern sides and were smoothened with a focal function of mean 3x3 sites (raster package). We derive $T_{min}$ and $T_{max}$ fluctuations though time decreasing 0.01℃ (i.e. lapse rate 0.01℃/m) for each increase in altitude (m). We draw minimum and maximum temperature from site mean temperatures by respectively subtracting and adding the absolute values from a normal distribution with mean=0 and standard deviation $SD=\frac{E_i}{max(E)}$ . This means that the distance between $T_{min}$ and $T_{max}$ increases in likelihood as scaled site elevation $E_i$ (m) increases. Lowest elevation across all times was -115m and highest elevation across all times was 803m from final time-step sea level (i.e. 0m). This resulted in temperature ranges of 0---5℃ (Animation 1, @fig-envir-temp B and D). In all our simulations we penalize connectivity though a cost multiplier of geographical distance [@hagen2021]. We used a cost of four (4) for unsuitable sites (i.e. under sea level) and 1 for suitable sites with the addition of 0.1 per 100m slope difference between source and destination site (@fig-envir-connect). Empirical evidence suggests that for high elevation species, greater elevation equals greater dispersal barriers, as mountain peaks are often embedded in a low elevation matrix, thus creating an island-like system [@vasconcelos2020]. Moreover, by choosing a strong matrix resistance, i.e. four, we stress the effects of topography, geodynamics and sea-level changes considering habitat unsuitability within 10'000 years.
+We simulate 5 Myrs of environmental dynamics of four patches (i.e. A, B, C and D), inspired by a theoretical but realistic isolated island system placed in the South. The total area is 60X60 Km^2^, with site area is 1 Km^2^ , time-step is 10'000 years, and 501 time-steps=(Animation 1). We consider dynamic topography, minimum temperature, and maximum temperature, combined with sea level changes which intensify during the Quaternary (\~last 2.6 Ma), and happened in a periodicity of 100 ky (i.e. 10 time steps) [@pillans1998]. This approximates Earth's eccentricity with a conservative periodicity [@shepard2018] and reflects interactions among global climate dynamics and changes in incoming solar radiation, likely influencing ecological and evolutionary patterns. We approximate empirical mean temperature and sea levels [@westerhold2020; @hoffmann2011]. Our dynamic temperature oscillates at similar periodicity and temporal intensity, so that lower temperature periods match periods of lowest sea levels (*Figure 1 Main,* @fig-envir-temp). Given the random attribute location on Earth, i.e. Southern Hemisphere, the south sides of each patch were 2℃ colder than the northern sides and were smoothened with a focal function of mean 3x3 sites (raster package). We derive $T_{min}$ and $T_{max}$ fluctuations though time decreasing 0.01℃ (i.e. lapse rate 0.01℃/m) for each increase in altitude (m). We draw minimum and maximum temperature from site mean temperatures by respectively subtracting and adding the absolute values from a normal distribution with mean=0 and standard deviation $SD=\frac{E_i}{max(E)}$ . This means that the distance between $T_{min}$ and $T_{max}$ increases in likelihood as scaled site elevation $E_i$ (m) increases. Lowest elevation across all times was -115m and highest elevation across all times was 803m from final time-step sea level (i.e. 0m). This resulted in temperature ranges of 0---5℃ (Animation 1, @fig-envir-temp B and D). In all our simulations we penalize connectivity though a cost multiplier of geographical distance [@hagen2021]. We used a cost of four (4) for unsuitable sites (i.e. under sea level) and 1 for suitable sites with the addition of 0.1 per 100m slope difference between source and destination site (@fig-envir-connect). Empirical evidence suggests that for high elevation species, greater elevation equals greater dispersal barriers, as mountain peaks are often embedded in a low elevation matrix, thus creating an island-like system [@vasconcelos2020]. Moreover, by choosing a strong matrix resistance, i.e. four, we stress the effects of topography, geodynamics and sea-level changes considering habitat unsuitability within 10'000 years.
 
 Our simulations started with three patches (i.e. A, B and C) which do not change in topography and end with four (i.e. A, B, C and D) patches (Figure 1). Patch A and B have their connectivity periodically increased as a result of a shallow land bridge that increases in connectivity depending on sea level changes (Figure 1 Main , Animation 1, @fig-envir-connect) while patch C remains relatively isolated. Patch D begins appearing around 1.5 Ma as a result of topographic and sea level changes (Figure 1 Main).
 
@@ -512,6 +513,9 @@ lpst <- lapply(sss, function(x){get_parm_stats(x$parms,x$stats$t)})
 plot_lxy_summary(y="competition", x="dispersal", data=lpst, datacol="cpu_time", colsrap = c("seagreen","orange3", "red4"))
 ```
 
+# 
+
+::: {#Results}
 # Results
 
 M0 diversity statistics reflected our expectations on general patterns of diversity, such as highest speciation rates at intermediate dispersal levels (@fig-sumstats_1-M0), meaning that peaks of $\gamma$ diversity relate to the spatial structure of our landscape. After investigation, all speciation events of simulations with dispersal $d_i<0.1$ happened within patches, and mostly during the dynamic phase (@fig-speciation-M0-though_time A). Speciation within patches was only observed in M0, as for ME and MET dispersal quickly evolved beyond the critical and small dispersal distances. The qualitative changes in speciation events for intermediary dispersal $d_i=[0.15-0.55]$ began involving speciation events between patches C and D, but for patch D this occurred only at the dynamic time phase, i.e. 2--0 Ma (@fig-speciation-M0-though_time C).
@@ -960,7 +964,7 @@ for (stat_i in 1:n_stats){
 
 ### Model Comparison
 
-Beyond comparing dispersal and interspecific competition gradients between models, i.e. M0 (@fig-sumstats_1-M0, @fig-sumstats_2-M0, @fig-sumstats_rest-M0-5 @fig-sumstats_rest-M0-2 @fig-sumstats_rest-M0-3 @fig-sumstats_rest-M0-7 @fig-sumstats_rest-M0-6 @fig-sumstats_rest-M0-1 @fig-sumstats_rest-M0-4), ME (@fig-final-traits-change-location-ME @fig-sumstats_1-ME @fig-sumstats_2-ME) and MET (@fig-final-traits-change-location-MET @fig-sumstats_1-MET @fig-sumstats_2-MET); we compared multiple summary statistics between models ().
+Beyond comparing dispersal and interspecific competition gradients between models, i.e. M0 (@fig-sumstats_1-M0, @fig-sumstats_2-M0, @fig-sumstats_rest-M0-5 @fig-sumstats_rest-M0-2 @fig-sumstats_rest-M0-3 @fig-sumstats_rest-M0-7 @fig-sumstats_rest-M0-6 @fig-sumstats_rest-M0-1 @fig-sumstats_rest-M0-4), ME (@fig-final-traits-change-location-ME @fig-sumstats_1-ME @fig-sumstats_2-ME) and MET (@fig-final-traits-change-location-MET @fig-sumstats_1-MET @fig-sumstats_2-MET); we compared multiple summary statistics between models (@fig-model-comp-2\@fig-model-comp-patch-D).
 
 ```{r}
 #| label: fig-model-comp-stats1
@@ -1115,8 +1119,6 @@ if(ita<=length(lt)){
 }
 ```
 
-### Trait Changes
-
 ```{r}
 #| label: fig-final-traits-change-location-M0
 #| fig-height: 6
@@ -1157,7 +1159,8 @@ plot_stat_classes_summary(lmodmbt[[2]], stats, colbar.at = 1000)
 plot_stat_classes_summary(lmodmbt[[3]], stats, colbar.at = 1000)
 ```
 
-### Traits exploration
+We display here several biodiversity patterns across the three different models. Exploring dynamics withing simulation 1119 and between models ME and MET highlight the interplay of eco-evolutionary dynamics (@fig-sim1119_ME-MET). Specially, in this simulation we cover the dynamics happening at the initial peak of the dispersal regime (d=0.37), i.e. between patches A and B. In order to investigate a gradient of different intraspecific competition (moderated over the heterospecific tolerance trait l) we compare tow simulations at the middle of first and second peak (@fig-speciation_niche_M0_d36_45).
+
 
 ```{r}
 #| label: fig-final-traits-XXXXX
@@ -1203,18 +1206,16 @@ if(ita<=length(lt)){
 }
 ```
 
-
-
 ```{r}
 #| label: fig-sim1119_ME-MET
 #| fig-height: 6
 #| fig-cap: |
-#|   Phylogeny through time with y-axis showing mean trait value per species along time for dispersal (A,B), heterospecific tolerance (C,D), mean temperature (E,F) and temperature width (D,H) for a simulation (i.e. 1119) under ME and MET respectively. Config 1119 had uinitial dispersal = 0.367 and heterospecific tolerance = 0.956. Species 3 at patch C (outlier species at B, C, D, G, H) remained isolated throughout the simulation, which is indicated by the lack of evolution in heterospecific tolerance (C,D) since species 3 was not exposed to tinterspecific competition.
+#|   Phylogeny through time, with the y-axis representing the mean trait value per species over time for different traits, including dispersal (A,B), heterospecific tolerance (C,D), mean temperature (E,F), and temperature width (D,H) for a simulation (i.e., 1119) under ME and MET, respectively. The configuration 1119 had an initial dispersal of 0.367 and heterospecific tolerance of 0.956. Species 3 at patch C was an outlier species at B, C, D, G, H, and remained isolated throughout the simulation. The lack of evolution in heterospecific tolerance (C,D) in species 3 indicates that it was not exposed to interspecific competition. This figure provides insights into the evolution of different traits over time and the relationship between phylogeny and trait values.
 
 sst <- list()
 
-sst[[1]] <- readRDS(here("./inst/raw/selection_500t/ss_t_500-0_M1_1119.rds"))
-sst[[2]] <- readRDS(here("./inst/raw/selection_500t/ss_t_500-0_M2_1119.rds"))
+sst[[1]] <- readRDS(here("./inst/raw/1119_ME_MET/ss_t_500-0_M1_1119.rds"))
+sst[[2]] <- readRDS(here("./inst/raw/1119_ME_MET/ss_t_500-0_M2_1119.rds"))
 
 ita <- 0
 set_par(8,2)
@@ -1237,40 +1238,109 @@ set_par(8,2)
 ```
 
 ```{r}
-#| label: fig-sim1119_ME-MET
+#| label: fig-speciation_niche_M0_d36_45
 #| fig-height: 6
 #| fig-cap: |
-#|   Phylogeny through time with y-axis showing mean trait value per species along time for dispersal (A,B), heterospecific tolerance (C,D), mean temperature (E,F) and temperature width (D,H) for a simulation (i.e. 1119) under ME and MET respectively. Config 1119 had uinitial dispersal = 0.367 and heterospecific tolerance = 0.956. Species 3 at patch C (outlier species at B, C, D, G, H) remained isolated throughout the simulation, which is indicated by the lack of evolution in heterospecific tolerance (C,D) since species 3 was not exposed to tinterspecific competition.
+#|   Visualization of the density distribution of the mean temperature trait the ancestor species. Ridgeline plots (density) of the mean temperature trait (T) for all the ancestor species at each speciation event over simulations with d=0.3 (A) and d=0.45 (B) across a gradient of heterospecific tolerance. The colors correspond to the normalized mean temperature trait, with heterospecific tolerance decreasing from top to bottom and the normalized mean temperature trait increasing from left to right.
 
-sst <- list()
+library(ggridges)
+library(ggplot2)
+library(viridis)
+library(hrbrthemes)
+library(stringr)
+library(patchwork)
+library(tibble)
+library(extrafont)
+# font_import()
+# loadfonts(device = "win")
+extrafont::loadfonts(device="win", quiet = TRUE)
 
-sst[[1]] <- readRDS(here("./inst/raw/selection_500t/ss_t_500-0_M1_1119.rds"))
-sst[[2]] <- readRDS(here("./inst/raw/selection_500t/ss_t_500-0_M2_1119.rds"))
+files <- list.files(here("./inst/raw/selection_500t"), full.names = T)
+# head(files)
+iidd <- unlist(lapply(str_split(files, "_"), function(x){
+  gsub(".rds","",x[length(x)])
+}))
+files <- files[order(as.numeric(iidd))]
 
-ita <- 0
-set_par(8,2)
-# par(mfrow=c(4,2))
-  for (trt_i in c("dispersal", "competition", "mean_temp", "temp_width")){
-    
-    plot_trait_phylogeny(sst[[1]][[2]],trait=trt_i, type="as2")
-    ita <- ita+1
-    title(LETTERS[ita], adj=0)
-    if (ita==1){
-      title("ME")
-    }
-    plot_trait_phylogeny(sst[[2]][[2]],trait=trt_i, type="as2")
-    ita <- ita+1
-    title(LETTERS[ita], adj=0)
-    if (ita==2){
-      title("MET")
-    }
+# list config masks
+lcm <- list()
+lcm$'1' <- (abs(sss$M0$parms$dispersal-0.3673469)<0.001)
+# table(mask_configs)
+lcm$'2' <- (abs(sss$M0$parms$dispersal-0.44897959)<0.001)
+# lcm$'3' <- (abs(sss$M0$parms$dispersal-0.48979592)<0.001)
+
+
+
+# file.copy(files[mask_configs], "C:/Users/am92guke/Documents/iDiv/code/dispdiv3/inst/raw/selection_500t/")
+lfdata <- list()
+
+for (l_i in 1:length(lcm)){
+  # l_i <- 1
+  configs <- rownames(sss$M0$parms[lcm[[l_i]],])
+  # double check... 
+  # configs <- configs[order(sss$M0$parms$competition[lcm[[l_i]]])]
+  n_confs <- length(configs)
+  f_data <- NULL
+  for (c_i in 1:n_confs){
+    data <- NULL
+    # c_i <- 1
+    file_name <- gsub("config", "ss_t_500-0", configs[c_i])
+    sst <- readRDS(here(paste0("./inst/raw/selection_500t/",file_name,".rds")))
+    # get traits of ancestor species before each speciation event
+    btt <- sst$mean_traits_sps[,-c(1:3)]
+    vals <- apply(btt, 2, function(x){
+      #### BROWSER ! ----------
+      x[!is.na(x)][1]
+    })
+    data <- data.frame("Normalized_Mean_Temperature" = vals[grep("mean_temp_sp_",names(vals))][-c(1,2)],
+                       "TempWidth" = vals[grep("temp_width_sp_", names(vals))][-c(1,2)],
+                       "Dispersal" = vals[grep("dispersal_sp_",names(vals))][-c(1,2)],
+                       "Competition" = vals[grep("competition_sp_", names(vals))][-c(1,2,3)],
+                       "CompetitionC" = rep(sss$M0$parms[configs[c_i], "competition"], length(vals[grep("competition_sp_", names(vals))][-c(1,2,3)])))
+    f_data <- rbind(f_data, data)
   }
+  
+  f_data$'Heterospecific tolerance (l)' <- as.factor(round(f_data$CompetitionC,2))
+  
+  f_tib <- as_tibble(f_data)
+  lfdata[[l_i]] <- f_tib
+  #hist(vals[grep("mean_temp", names(vals))])
+}
+plts <- lapply(lfdata, function(x){
+  f_tib <- x
+  ggplot(f_tib, aes(x = `Normalized_Mean_Temperature`, y = `Heterospecific tolerance (l)`, fill = ..x..)) +
+    geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01) +
+    scale_fill_viridis(name = "Temp. [C]", option = "C") +
+    labs(title = paste0('M0 with d=',round(f_tib$Dispersal[1],2)), element_text(size = 8,family="Arial")) +
+    theme_ipsum() +
+    theme(
+      legend.position="none",
+      panel.spacing = unit(0.1, "lines"),
+      strip.text.x = element_text(size = 8,family="Arial"),
+    ) 
+})
+# why i dont like ggplot:
+for (p_i in 1:length(plts) ){
+# p_i <- 1
+nl2 <- lapply(plts[[p_i]]$theme, names)
+fix <- unlist(nl2)[unlist(nl2)%in%"family"]
+for (fix_i in 1:length(fix)){
+    # fix_i <- 1
+    fix_NOW <- gsub('[[:digit:]]+', '', names(fix)[fix_i])
+    plts[[p_i]]$theme[[fix_NOW]]$family <-  "Arial"
+  }
+}
+
+
+# set_par(1,1)
+#suppressWarnings(print(plts[1]))
+
+plts[[1]]+plts[[2]]
 ```
 
 ```{r}
-{r}
 #| label: fig-testing-of-limiting-similarity
-#| fig-height: 6
+#| fig-height: 4
 #| fig-cap: |
 #|  The theory of limiting similarity predicts that as species diversity 
 #|  increases, the average population size of each species decreases due to the
@@ -1363,10 +1433,8 @@ temp <- lapply(lt, function(x){
   title(LETTERS[ita], adj=0)
 })
 ```
-
-We display here several biodiversity patterns across the three different models.
-
-# References
+:::
 
 ::: {#refs}
+# References
 :::
