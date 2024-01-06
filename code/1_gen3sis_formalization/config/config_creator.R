@@ -200,6 +200,95 @@ current_wd <- getwd()
 setwd("code/1_gen3sis_formalization/config/")
 make_experiment(model, parameters, n=NULL)
 setwd(current_wd)
+
+
+
+#______________#
+###   M0_H  ####
+#______________#
+model <- "M0_H"
+
+parameters <- list("dispersal"=seq(0,1, length.out=5),
+                   "divergence_threshold"=65,
+                   "competition"=seq(0.9,1,length.out=4))
+permuts <- expand.grid(parameters)
+dim(permuts)
+plot(permuts$dispersal, permuts$competition)
+
+permuts <- as.list(permuts)
+parameters <- permuts[1:length(parameters)]
+
+current_wd <- getwd()
+setwd("code/1_gen3sis_formalization/config")
+make_experiment(model, parameters, n=NULL)
+setwd(current_wd)
+
+
+#______________#
+###   M1_H  ####
+#______________#
+model <- "M1_H"
+
+parameters <- list("dispersal"=seq(0,1, length.out=5),
+                   "divergence_threshold"=65,
+                   "competition"=seq(0.9,1,length.out=4))
+
+permuts <- expand.grid(parameters)
+dim(permuts)
+plot(permuts$dispersal, permuts$competition)
+
+permuts <- as.list(permuts)
+parameters <- permuts[1:length(parameters)]
+
+current_wd <- getwd()
+setwd("code/1_gen3sis_formalization/config")
+make_experiment(model, parameters, n=NULL)
+setwd(current_wd)
+
+#______________#
+###   M2_H  ####
+#______________#
+model <- "M2_H"
+
+parameters <- list("dispersal"=seq(0,1, length.out=5),
+                   "divergence_threshold"=65,
+                   "competition"=seq(0.9,1,length.out=4))
+
+permuts <- expand.grid(parameters)
+dim(permuts)
+### APPLY TRADE-OFF FOR all initial conditions!
+# I go though all of this because I really want to have this trade off function
+# all declared in one place! If the template is false, so should be the definition of
+# the input variables and the simulations... so it;s easier to see if a mistake 
+# is present.
+templatef  <- readLines("code/1_gen3sis_formalization/config/config_template_M2_H.R") # read template function to get the apply_trade_off function
+function_line <- grep("^apply_trs_tradeoff <- function", templatef)
+# Find the end of the function declaration
+brace_count <- 0
+for (i in function_line:length(templatef)) {
+  brace_count <- brace_count + sum(grepl("\\{", templatef[i])) - sum(grepl("\\}", templatef[i]))
+  if (brace_count == 0) {
+    end_line <- i
+    break
+  }
+}
+function_string <- paste(templatef[function_line:end_line], collapse = "\n")
+function_expr <- parse(text = function_string)
+eval(function_expr) # load the apply_trs_tradeoff function!
+# end 
+permuts <- apply_trs_tradeoff(permuts) # apply it
+plot(permuts$dispersal, permuts$competition)
+permuts <- as.list(permuts)
+parameters <- permuts[1:length(parameters)]
+
+current_wd <- getwd()
+setwd("code/1_gen3sis_formalization/config/")
+make_experiment(model, parameters, n=NULL)
+setwd(current_wd)
+
+
+
+
 # 
 # #______________#
 # ###    M3   ####

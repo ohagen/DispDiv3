@@ -15,9 +15,9 @@ source(file.path(pls$dir_base,"summary_stats/support/load_support_libs.R"))
 if(!interactive()){
   cnfs <- commandArgs(trailingOnly = TRUE)
   print(cnfs)}
-model <- if(interactive()){"M0"}else{cnfs[1]}
+model <- if(interactive()){"M0_H"}else{cnfs[1]}
 config_n <- if(interactive()){1}else{as.numeric(cnfs[2])}
-expp <- if(interactive()){"perms_disp_comp_2000_M0"}else{cnfs[3]}
+expp <- if(interactive()){"test_Trait_H"}else{cnfs[3]}
 
 # # load parameters table
 parms <- load_parameters(dc=pls$dir_config_gen, expp, model)
