@@ -6,7 +6,7 @@ authors:
 - Wiegand T
 - Chase JM 
 - Onstein RE
-format: html
+format: pdf
 editor: visual
 execute: 
   echo: false
