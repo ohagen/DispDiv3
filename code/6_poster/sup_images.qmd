@@ -57,33 +57,17 @@ for (li in 1:length(sss)){
 names(sss) <- c("M0", "ME", "MET")
 ```
 
-```{# {r}
-# #| label: fig-init-parameters
-# #| fig-height: 2
-# #| fig-cap: |
-# #|   Initial competition and dispersal parameters for the main models and 
-# #|   experiments. Colors show the CPU time per simulation (n=8000). 
-# 
-# # get list of desired stats
-# lpst <- lapply(sss, function(x){get_parm_stats(x$parms,x$stats$t)})
-# plot_lxy_summary(y="competition", x="dispersal", data=lpst, datacol="cpu_time", colsrap = c("seagreen","orange3", "red4"))
-```
-
 ```{r}
 mbt <- get_parm_stats(parms = sss[[1]]$parms, stat = sss[[1]]$stats$t)
 main_stats_names <- c("gamma"="Gamma diversity at final time-step at the entire landscape",
                       "mtx_beta_prop_T"="Proportional beta Whittaker's species turnover",
-                      "mtx_mean_alpha_T"="Log 10 mean local alpha taxonomic diversity", 
-                      "mtx_zeta_T"="XXXXXXX",
-                      "mtx_eta_T"="XXXXXXX",
-                      "maxlik_betasplit_TF"="XXXXXXX",
-                      "speciations_perc"="XXXXXXX", 
-                      "extinctions_perc"="XXXXXXX", 
-                      "mtx_MPD_S_T"="XXXXXXX", 
-                      "mtx_MNTD_S_T"="XXXXXXX")#
+                      "mtx_mean_alpha_T"="Mean local alpha taxonomic diversity", 
+                      "mtx_PD_S_T"="mean local phylogenetic diversity",
+                      "speciations_perc"="Proportion of speciation events (rel. gamma)",
+                      "extinctions_perc"="Proportion of extinction events")
 # plot all
 # plot_stat_classes_summary(mbt, main_stats_names)
-for (stat_i in 1:2){
+for (stat_i in 1:length(main_stats_names) ){
   plot_stat_classes(mbt[,], cats="competition", y=names(main_stats_names)[stat_i], 
                       x="dispersal",
                       xlab="Dispersal (d)",
@@ -92,45 +76,4 @@ for (stat_i in 1:2){
     title(paste0(LETTERS[stat_i], ". ", main_stats_names[stat_i]), adj=0)
 }
 
-```
-
-```{r}
-#| label: fig-final-traits-XXXXX
-#| fig-height: 6
-#| fig-cap: |
-#|   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-lt <- lapply(sss, function(x){
-  get_parm_stats(parms = x$parms,
-                 stat = x$stats$t)# cbind(x$stats$t, x$stats$tt$Total)
-})
-
-lt <- lapply(lt, function(x){
-  x <- x[x$gamma>9,]
-})
-
-stats <- grep("^trs.+50%$", names(sss$M0$stats$t), value = T)
-#stats <- grep("mean", stats, value = T)
-# stats <- gsub("range_spatial_sps_", "",stats)
-
-stats_i <- c(4,2,3) # order of plot
-
-set_par(length(stats_i)*length(lt),length(stats_i))
-ita <<- 0
-# lapply(lt, function(x){
-# hist(x$trs_spread_temp_width)
-# })
-for (indexi in 1:length(stats_i)){
-  
-  ylimt <- range(unlist(lapply(lt, function(x){x[[stats[stats_i[indexi]]]]})))
-  
-lapply(lt, function(x){
-  ita <<-ita+1
-plot(x[[stats[1]]],x[[stats[stats_i[indexi]]]], xlab=stats[1], ylab=stats[stats_i[indexi]], cex=0.5, xlim=c(0,1), ylim=ylimt)
-title(LETTERS[ita], adj=0)
-if(ita<=length(lt)){
-  title(names(sss)[ita])
-}
-})
-
-}
 ```
