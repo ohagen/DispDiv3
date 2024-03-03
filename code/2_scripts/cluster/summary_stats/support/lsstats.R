@@ -1,5 +1,5 @@
 ## METADATA ===============================================================
-## Description: Sigle statistics functions definition
+## Description: Single statistics functions definition
 ## 
 ## R version: 4.2.2 for Windows
 ## Date: 2023-08-02 20:46:39

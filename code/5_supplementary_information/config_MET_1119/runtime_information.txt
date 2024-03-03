@@ -1,0 +1,53 @@
+runtime: 0.167337 hours
+
+
+ R Version Information:
+
+               _                           
+platform       x86_64-pc-linux-gnu         
+arch           x86_64                      
+os             linux-gnu                   
+system         x86_64, linux-gnu           
+status                                     
+major          4                           
+minor          0.0                         
+year           2020                        
+month          04                          
+day            24                          
+svn rev        78286                       
+language       R                           
+version.string R version 4.0.0 (2020-04-24)
+nickname       Arbor Day                   
+
+
+ Session Information: 
+
+R version 4.0.0 (2020-04-24)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /gpfs0/global/software/easybuild-broadwell/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_haswellp-r0.3.7.so
+
+locale:
+[1] C
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] gen3sis_1.5.3
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.11      lattice_0.20-41  codetools_0.2-16 grid_4.0.0      
+ [5] lifecycle_1.0.3  magrittr_2.0.3   rlang_1.1.1      stringi_1.7.12  
+ [9] cli_3.6.1        raster_3.6-23    sp_2.0-0         Matrix_1.2-18   
+[13] vctrs_0.6.3      tools_4.0.0      stringr_1.5.0    glue_1.6.2      
+[17] igraph_1.5.0.1   compiler_4.0.0   terra_1.7-39     pkgconfig_2.0.3 
+[21] gdistance_1.6.4 
+
+
+ System: 
+
+sysname 
+"Linux" 

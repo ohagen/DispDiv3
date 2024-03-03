@@ -94,7 +94,7 @@ plot_stat_classes_summary <- function(mbt, stats_names, colbar.at=1, limit_val=3
     plot_stat_classes(mbt[mask_mbt,], cats="competition", y=stats_names[stat_i], 
                       x="dispersal",
                       xlab=if(stat_i>=(n_stats-1)){"Dispersal (d)"}else{""},
-                      ylab=stats_symbol_lib[[stats_names[stat_i]]],
+                      ylab=stats_symbol_lib[[stats_names[stat_i]]][1],
                       plt_type="FALSE")
     title(LETTERS[stat_i], adj=0)
     #add_to_plot_topleft(LETTERS[stat_i])

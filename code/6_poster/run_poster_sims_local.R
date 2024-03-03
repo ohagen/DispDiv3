@@ -12,7 +12,7 @@ source(file.path(pls$dir_base,"simulations/load_sim_libs.R"))
 
 ## 
 model <- "M0"
-config_n <- config_n <- 2
+config_n <- config_n <- 1
 expp <- "poster_IBS_2024"
 
 # run simulation and store summary obejct to sim

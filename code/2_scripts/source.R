@@ -23,8 +23,10 @@ patches <- list(
   "center_coords"=patches_center_coords,
   "center_ids"=c("490","532", "2950", "2992"),
   "time-phase"=list("Total"=450:0, "Stable"=450:250, "Dynamic"=200:0),
-  "disprange"=list(c(0,0.15), c(0.15,0.55), c(0.55,1))
+  "disprange"=list(c(0,0.15), c(0.15,0.55), c(0.55,1)),
+  "dispersal_color"=colorRampPalette(c("#3a0ca3", "#A8EB12"))
 )
+
 
 # decleare paths list 
 pls <- list(
