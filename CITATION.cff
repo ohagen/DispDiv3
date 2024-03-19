@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this code for your research, please cite it using this metadata."
+title: "Supplementary Material Data: The macro-eco-evolutionary interplay between dispersal competition and landscape structure in generating biodiversity"
+version: 1.0.0
+date-released: 2024-03-18
+dio: "10.5281/zenodo.5006412"
+
+authors:
+  - family-names: "Hagen"
+    given-names: "Oskar"
+    orcid: "https://orcid.org/0000-0002-7931-6571"
+    affiliation: "German Centre For Integrative Biodiversity Research (iDiv), Halle-Jena-Leipzig, Leipzig, Germany"
+  - family-names: "Viana"
+    given-names: "D. S."
+    orcid: "https://orcid.org/0000-0002-7864-0871"
+    affiliation: "Department of Conservation Biology, Estación Biológica de Doñana (EBD-CSIC), Seville, Spain"
+  - family-names: "Wiegand"
+    given-names: "T."
+    orcid: "https://orcid.org/0000-0002-3721-2248"
+    affiliation: "Department of Ecological Modelling, UFZ–Helmholtz Centre for Environmental Research, Leipzig, Germany"
+  - family-names: "Chase"
+    given-names: "J. M."
+    orcid: "https://orcid.org/0000-0001-5580-4303"
+    affiliation: "German Centre For Integrative Biodiversity Research (iDiv), Halle-Jena-Leipzig, Leipzig, Germany"
+  - family-names: "Onstein"
+    given-names: "R. E."
+    orcid: "https://orcid.org/0000-0002-2295-3510"
+    affiliation: "German Centre For Integrative Biodiversity Research (iDiv), Halle-Jena-Leipzig, Leipzig, Germany"
+
+keywords:
+  - "Biodiversity"
+  - "Process Based Modelling"
+  - "Dispersal"
+  - "Speciation"
+  - "Extinction"
+  - "Macroevolution"
+
+repository-code: "https://github.com/ohagen/DispDiv3"
+
+related-identifiers:
+  - identifier: "https://doi.org/10.5281/zenodo.5006412"
+    relation: "IsSupplementTo"
+    resource: "Zenodo"
