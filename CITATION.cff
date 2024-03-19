@@ -3,7 +3,7 @@ message: "If you use this code for your research, please cite it using this meta
 title: "Supplementary Material Data: The macro-eco-evolutionary interplay between dispersal competition and landscape structure in generating biodiversity"
 version: 1.0.0
 date-released: 2024-03-18
-dio: "10.5281/zenodo.5006412"
+doi: "10.5281/zenodo.5006412"
 
 authors:
   - family-names: "Hagen"
@@ -38,6 +38,6 @@ keywords:
 repository-code: "https://github.com/ohagen/DispDiv3"
 
 related-identifiers:
-  - identifier: "https://doi.org/10.5281/zenodo.5006412"
+  - identifier: "https://doi.org/10.1098/rstb.2023.0140"
     relation: "IsSupplementTo"
     resource: "Zenodo"
