@@ -1,5 +1,5 @@
 # DispDiv3 <img src="inst/logo/dispdiv3.png" align="right" width="500" />
-# Supplementary Materials: A macroevolutionary perspective on how dispersal can affect biodiversity and vice versa
+# Supplementary Materials: The macro-eco-evolutionary interplay between dispersal, competition, and landscape structure in generating biodiversity
 
 Hagen O, Viana DS, Wiegand T, Chase JM, Onstein RE
 
