@@ -258,7 +258,7 @@ title(LETTERS[2], adj=0)
 
 ## Ecological equilibrium
 
-Ecological equilibrium was assumed for every site and for every timestep. Environmental fitness considered min and max temperature). Population size $N_i$ changes according to local site conditions (i.e. $T_{min}, T_{max}$\[9---26℃\] and evolving species temperature optimum $T_i$ and thermal range $\omega_i$ according to the geometric mean of a Gaussian environmental function at minimum and maximum site temperature (for an example, see @fig-environmental-fitnress).
+Ecological equilibrium was assumed for every site and for every timestep. Environmental fitness considered min and max temperature. Population size $N_i$ changes according to local site conditions (i.e. $T_{min}, T_{max}$\[9---26℃\] and evolving species temperature optimum $T_i$ and thermal range $\omega_i$ according to the geometric mean of a Gaussian environmental function at minimum and maximum site temperature (for an example, see @fig-environmental-fitnress).
 
 ```{r}
 #| label: fig-environmental-fitnress
@@ -529,29 +529,41 @@ $$ {#eq-S2}
 The total population size of all species in the site is given by $J=\sum_{i=1}^{S}N_i$ where S is the total number of species in the site. Assuming zero-sum dynamics, which emerges if there is density dependence at the individual scale (e.g., through crowding competition), the number of heterospecifics at the site is given in good approximation by $\sum_{i\neq f} N_i=J-N_f$ . Thus, equation 1 in equilibrium simplifies to
 
 $$
-0=r_f-\alpha_{ff} N_f^\ast+\alpha_{fh} N_f\prime^\ast-\alpha_{fh}J          $$ {#eq-S3}
+0=r_f-\alpha_{ff} N_f^\ast+\alpha_{fh} N_f^\ast-\alpha_{fh}J          $$ {#eq-S3}
 
-which leads to $r_f-\alpha_{ff} N_f^\ast+\alpha_{fh} N_f^\ast-\alpha_{fh} J=0$, and to $r_f-\alpha_{fh}J =(\alpha_{ff}-\alpha_{fh})N_f^\ast$, which yields the equilibrium
+which leads to $r_f-\alpha_{fh}J =(\alpha_{ff}-\alpha_{fh})N_f^\ast$, which yields the equilibrium
 
 $$
 N_f^\ast=\frac{r_f-\alpha_{fh}J}{\alpha_{ff}-\alpha_{fh}}
 $$ {#eq-S4}
 
-Thus, besides the condition that $\alpha_{ff}>\alpha_{fh}$ (i.e. the conspecific interaction coefficient is larger than the heterospecific interaction coefficient), feasibility (i.e., a positive equilibrium \$ N_f\^\ast\$ requires that
+Thus, besides the condition that $\alpha_{ff}>\alpha_{fh}$ (i.e. the conspecific interaction coefficient is larger than the heterospecific interaction coefficient), feasibility (i.e., a positive equilibrium $N_f^*$ requires that
 
 $$
 \alpha_{fh}J<r_f
 $$ {#eq-S5}
 
-which also means that heterospecific competition must be sufficiently small to allow population growth at low populations sizes (this is the so called invasion criterion). Note that we obtain from equation S5 for small abundances of the focal species f the per-capita population growth rate $\frac{dN_f}{dt} \frac{1}{N_f} =r_f-\alpha_{fh}J$, which is positive if equation is satisfied. As explained in detail in Wiegand et al. (2021), the total population size J in one site at equilibrium can be then be estimated as $$
-    J=\frac{\sum_{f=1}^S\frac{\alpha_{ff}K_f}{\alpha_{ff}-\alpha_{fh}}} {(1+\sum_{f=1}^S \frac{\alpha_{fh}}{\alpha_{ff}-alpha_{fh}})}
+which also means that heterospecific competition must be sufficiently small to allow population growth at low populations sizes (this is the so called invasion criterion). Note that we obtain from equation 5 for small abundances of the focal species f the per-capita population growth rate $\frac{dN_f}{dt} \frac{1}{N_f} =r_f-\alpha_{fh}J$, which is positive if equation is satisfied. As explained in detail in Wiegand et al. (2021), the total population size J in one site at equilibrium can be then be estimated as $$
+    J=\frac{\sum_{f=1}^S\frac{\alpha_{ff}K_f}{\alpha_{ff}-\alpha_{fh}}} {(1+\sum_{f=1}^S \frac{\alpha_{fh}}{\alpha_{ff}-\alpha_{fh}})}
 $$ {#eq-S6}
 
-To estimate equilibrium in the context of competition dynamics, we implement an iterative approach. Firstly, all species in a site are checked to determine if $a_{ff}>a_{ff}$ (condition 1, eq. 8). If not, the species is removed from consideration as conspecifics compete weaker than heterospecifics. Next, the carrying capacity ($J^{*}$) is estimated based on the values of $K_f, a_{ff}, a_{fh}$ for each species *f (*eq. 10). Then, all species are checked again to see if the product of the intraspecific competition coefficient and carrying capacity is greater than the product of the interspecific competition coefficient $a_{ff}K>a_{fhJ^{*}}$ (condition 2, eq. 8).  Species that do not meet this condition, indicating a too low carrying capacity, are removed, and the estimation process returns estimating $J^{*}$ (eq. 10). This is repeated until all remaining species satisfy the condition 2. Finally, the equilibrium of each species$B^*_f$ is demonstrated using equation 8 (@fig-ecology-intercompetition).
+In the special case where the interaction coefficients are the same for all species (as in our M0 model), we can derive a more detailed condition for the per capita population growth rates $r_f=\alpha_{ff}K_f$ to obtain positive abundances. In this case the community size $J$ of the community in equilibrium can be estimated as
+
+$$
+    J=\frac{S\frac{1}{\alpha_{ff}\alpha_{fh}}}{(1+S\frac{\alpha_{fh}}{\alpha_{ff}-\alpha_{fh}})}\frac{1}{S}\sum_{f=1}^S{r_f}
+$$ {#eq-S7}
+
+and with $\overline{r_f}=\frac{1}{S}\sum_{f=1}^S{r_f}$ being the community average maximal per capita population growth rate we find together with equation 4 the feasibility condition.
+
+$$\frac{r_f}{\overline{r_f}}>\frac{S\alpha_{fh}}{\alpha_{ff}+\alpha_{fh}(S-1)}=\mu$$ {#eq-S8}
+
+The factor $\mu$ is always smaller than one and particularly small if the number of species (S) and the heterospecific interaction coefficient $\alpha_{fh}$ are small. It approaches a value of one if the species richness *S* becomes large and/or if heterospecific competition $\alpha_{fh}$ approaches the strength of conspecific competition $\alpha_{ff}$. Equation 8 defines a minimum value for the growth rate $r_f$ to allow for a positive equilibrium. Equation 8 thus tells us that a species will go extinct in a given site (i.e. having a negative equilibrium abundance) if its maximal per capita population growth rate $r_f$ is too small, compared to the average per capita population growth rate $\overline{r_f}$ of all species at the site. Importantly, the environmental conditions, leading to lower growth rate $r_f$, can be poorer if there are fewer species at the site and/or if heterospecific competition is weaker.
+
+To estimate equilibrium in the context of competition dynamics, we implement an iterative approach. Firstly, all species in a site are checked to determine if $a_{ff}>a_{ff}$ (condition 1, eq. 4). If not, the species is removed from consideration as conspecifics compete weaker than heterospecifics. Next, the carrying capacity ($J^{*}$) is estimated based on the values of $K_f, a_{ff}, a_{fh}$ for each species *f (*eq. 2). Then, all species are checked again to see if the product of the intraspecific competition coefficient and carrying capacity is greater than the product of the interspecific competition coefficient $a_{ff}K>a_{fhJ^{*}}$ (condition 2, eq. 4).  Species that do not meet this condition, indicating a too low carrying capacity, are removed, and the estimation process returns estimating $J^{*}$ (eq. 6). This is repeated until all remaining species satisfy the condition 2. Finally, the equilibrium of each species$N^*_f$ is demonstrated using equation 6 (@fig-ecology-intercompetition).
 
 ## Summary statistics
 
-We conducted several statistics using custom and code from several R-packages [@kembel2010][@bortolussi2006][@castiglione2021], specifically, $log_{10}(\bar{\alpha})$: Log 10 of mean alpha diversity (all sites) at final timestep. $\bar{occup}~Km^2$: Mean regional occupancy calculated in Km2 according to the mean number of sites occupied by all species through time. $Occupancy\space change %$: Proportion of occupancy change during the simulation. $\frac{Slope\ dispersal}{T_{start}/T_{end}}$: Rate of change in dispersal trait over time. $Dispersal\ (d)_{t_{start}}$: Dispersal trait value at the initial timestep. $\phi$: Speciation threshold or time of isolation until reproductive isolation occurs. $l_{t_{start}}$: Competition trait value at the initial timestep. $Extinction\ prop.$: Proportion of extinction events in a simulation over final gamma diversity. $Speciation\ prop.$: Proportion of speciation events in a simulation over final gamma diversity. $\gamma$: Final gamma diversity, or final regional taxonomic richness (number of species alive at the last timestep). $Turnover$: Turnover between speciation and extinction. $Speciation\ invar.$: Temporal speciation invariability. $Extinction\ invar.$: Temporal extinction invariability. $Turnover\ invar.$: Temporal turnover invariability. $\bar{N}_{5\%\ t_{end}}$: Mean population size of its 5% quantile at final timestep. $\bar{N}_{50\%\ t_{end}}$: Mean population size at final timestep. $\bar{N}_{95\%\ t_{end}}$: Mean population size of its 95% quantile at final timestep. $\bar{PD}_{\alpha}$: The Mean Faith's Phylogenetic Diversity at the site level. $\bar{\alpha}$: Mean alpha diversity of the entire archipelago. $\beta\%$: Proportional species turnover. $\beta W$: Whittaker beta diversity. $Zeta\ zeta$: Proportion of species that are common to all assemblages. $Eta\ eta$: Proportion of species that are not unique to an assemblage nor common to all assemblages. $Theta\ theta$: Species that are unique to an assemblage. $PD_{S}$: Standardized value of the unrooted Phylogenetic Diversity measure for species. $MPD_{S}$: Standardized value of the Mean Pairwise Distance measure. $MNTD_{S}$: Standardized value of the mean nearest taxon distance measure. $CD_{X-Y}$: Standardized Community Distance between two locations. $Mode\ d$: Number of modes at the dispersal trait distribution at final timestep. $\bar{d}_{50\%\ t_{end}}$: Mean dispersal trait at final timestep. $\bar{T}_{50\%\ t_{end}}$: Mean thermal optimum trait at final timestep. $\bar{\omega}_{50\%\ t_{end}}$: Mean thermal range trait at final timestep. $\bar{l}_{50\%\ t_{end}}$: Mean tolerance to other species trait at final timestep. $Spread\ d\ t_{end}$: The range between the lowest and highest dispersal trait values at the final timestep. $\beta_{max\ split}$: The complete phylogenetic beta value derived from the Maximum Likelihood estimation within the Beta-splitting model. Additional recorded values include: $Finished$: Status of final simulation, if OK, simulation was finished. $CPU\ time\ (h)$: CPU time in hours for simulation.
+We conducted several statistics using custom and code from several R-packages [@kembel2010][@bortolussi2006][@castiglione2021], specifically, $log_{10}(\bar{\alpha})$: Log 10 of mean alpha diversity (all sites) at final timestep. $\overline{occup}~Km^2$: Mean regional occupancy calculated in Km2 according to the mean number of sites occupied by all species through time. $Occupancy\space change %$: Proportion of occupancy change during the simulation. $\frac{Slope\ dispersal}{T_{start}/T_{end}}$: Rate of change in dispersal trait over time. $Dispersal\ (d)_{t_{start}}$: Dispersal trait value at the initial timestep. $\phi$: Speciation threshold or time of isolation until reproductive isolation occurs. $l_{t_{start}}$: Competition trait value at the initial timestep. $Extinction\ prop.$: Proportion of extinction events in a simulation over final gamma diversity. $Speciation\ prop.$: Proportion of speciation events in a simulation over final gamma diversity. $\gamma$: Final gamma diversity, or final regional taxonomic richness (number of species alive at the last timestep). $Turnover$: Turnover between speciation and extinction. $Speciation\ invar.$: Temporal speciation invariability. $Extinction\ invar.$: Temporal extinction invariability. $Turnover\ invar.$: Temporal turnover invariability. $\bar{N}_{5\%\ t_{end}}$: Mean population size of its 5% quantile at final timestep. $\bar{N}_{50\%\ t_{end}}$: Mean population size at final timestep. $\bar{N}_{95\%\ t_{end}}$: Mean population size of its 95% quantile at final timestep. $\bar{PD}_{\alpha}$: The Mean Faith's Phylogenetic Diversity at the site level. $\bar{\alpha}$: Mean alpha diversity of the entire archipelago. $\beta\%$: Proportional species turnover. $\beta W$: Whittaker beta diversity. $Zeta\ zeta$: Proportion of species that are common to all assemblages. $Eta\ eta$: Proportion of species that are not unique to an assemblage nor common to all assemblages. $Theta\ theta$: Species that are unique to an assemblage. $PD_{S}$: Standardized value of the unrooted Phylogenetic Diversity measure for species. $MPD_{S}$: Standardized value of the Mean Pairwise Distance measure. $MNTD_{S}$: Standardized value of the mean nearest taxon distance measure. $CD_{X-Y}$: Standardized Community Distance between two locations. $Mode\ d$: Number of modes at the dispersal trait distribution at final timestep. $\bar{d}_{50\%\ t_{end}}$: Mean dispersal trait at final timestep. $\bar{T}_{50\%\ t_{end}}$: Mean thermal optimum trait at final timestep. $\bar{\omega}_{50\%\ t_{end}}$: Mean thermal range trait at final timestep. $\bar{l}_{50\%\ t_{end}}$: Mean tolerance to other species trait at final timestep. $Spread\ d\ t_{end}$: The range between the lowest and highest dispersal trait values at the final timestep. $\beta_{max\ split}$: The complete phylogenetic beta value derived from the Maximum Likelihood estimation within the Beta-splitting model. Additional recorded values include: $Finished$: Status of final simulation, if OK, simulation was finished. $CPU\ time\ (h)$: CPU time in hours for simulation.
 
 ## M0
 
@@ -1353,10 +1365,9 @@ if(ita<=length(lt)){
 
 @fig-final-traits-change-location-M0MEMET illustrates the variations in trait changes for the models M0, ME, and MET across different ecological parameters: dispersal, tolerance to other species, thermal range, and thermal optimum. Each model's (i.e. columns) shows the slope of trait change between the initial and final timesteps, offering insights into how these traits evolve over time under different conditions and assumptions. The use of color gradients conveys the intensity of competition affecting these traits, with warmer colors indicating higher levels of competition. This visualization underscores the complex interplay between competition and trait adaptability in ecological models, highlighting how traits like dispersal capacity and temperature tolerance shift in response to environmental pressures and species interactions.
 
-@fig-final-traits-by-diversity presents the final gamma richness in relation to various mean parameter values at the final timestep, including thermal range, dispersal, and heterospecific interaction coefficient, across the models M0, ME, and MET. The columns for each model demonstrate the impact of these parameters on biodiversity, utilizing color gradients to represent the strength of competition and dispersal. The analysis of these relationships stresses the critical roles that temperature tolerance, dispersal capabilities, and interactions with other species play in shaping community richness and diversity. 
+@fig-final-traits-by-diversity presents the final gamma richness in relation to various mean parameter values at the final timestep, including thermal range, dispersal, and heterospecific interaction coefficient, across the models M0, ME, and MET. The columns for each model demonstrate the impact of these parameters on biodiversity, utilizing color gradients to represent the strength of competition and dispersal. The analysis of these relationships stresses the critical roles that temperature tolerance, dispersal capabilities, and interactions with other species play in shaping community richness and diversity.
 
 @fig-slopes-trait_change depicts the final gamma richness plotted against the mean trait changes, illustrating the slope between initial and final trait values for all species within the models M0, ME, and MET. It examines traits such as thermal range, dispersal, and heterospecific interaction coefficient, segmented by each model in separate columns. Two color gradients are used for the strength of competition and dispersal. This visualization effectively showcases the linkage between trait adaptability and community richness, emphasizing the importance of assumptions to evolutionary responses to environmental and interspecific pressures in determining ecological outcomes.
-
 
 ```{r}
 #| label: fig-final-traits-change-location-M0MEMET
@@ -1474,7 +1485,7 @@ for (i in 1:3){
 
 ## Further analysis
 
-Additional, we explore the intricate dynamics of species interaction and environmental adaptation through a series of figures. Figure @fig-final-traits-XXXXX showcases the final mean dispersal trait ($d$), plotted against final the mean competitive trait ($l$) (i.e.  tolerance to other species), thermal optimum ($T$), and thermal range ($\omega$) across Models MO, ME, and MET (@fig-final-traits-XXXXX Figure A-I). Further expanding on ecological theories, Figure @fig-testing-of-limiting-similarity delves into the theory of limiting similarity, illustrating how signals for species diversity impacting average population sizes through competitive exclusion. Lastly, Figure @fig-testing-comp-speciation-dispersal juxtaposes speciation versus extinction percentages with temporal stability in macroevolutionary events. This figure not only highlights the impact of interspecific competition on biodiversity outcomes but also shows temporal invariability fo the macroevolutionary processes (@fig-testing-comp-speciation-dispersal D-F).
+Additional, we explore the intricate dynamics of species interaction and environmental adaptation through a series of figures. Figure @fig-final-traits-XXXXX showcases the final mean dispersal trait ($d$), plotted against final the mean competitive trait ($l$) (i.e. tolerance to other species), thermal optimum ($T$), and thermal range ($\omega$) across Models MO, ME, and MET (@fig-final-traits-XXXXX Figure A-I). Further expanding on ecological theories, Figure @fig-testing-of-limiting-similarity delves into the theory of limiting similarity, illustrating how signals for species diversity impacting average population sizes through competitive exclusion. Lastly, Figure @fig-testing-comp-speciation-dispersal juxtaposes speciation versus extinction percentages with temporal stability in macroevolutionary events. This figure not only highlights the impact of interspecific competition on biodiversity outcomes but also shows temporal invariability fo the macroevolutionary processes (@fig-testing-comp-speciation-dispersal D-F).
 
 ```{r}
 #| label: fig-final-traits-XXXXX
@@ -1709,48 +1720,33 @@ for (i in 1:3){
 
 .
 
+.
 
 .
 
+.
 
 .
 
+.
 
 .
 
+.
 
 .
 
+.
 
 .
 
+.
 
 .
 
-
 .
 
-
 .
-
-
-.
-
-
-.
-
-
-.
-
-
-.
-
-
-.
-
-
-.
-
 
 ::: {#references}
 # References
