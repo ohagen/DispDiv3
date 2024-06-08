@@ -1,6 +1,6 @@
 ---
-title: "Supplementary Materials"
-subtitle:  "The macro-eco-evolutionary interplay between dispersal, competition, and landscape structure in generating biodiversity"
+title: "The macro-eco-evolutionary interplay between dispersal, competition, and landscape structure in generating biodiversity"
+subtitle:  "Supplementary Materials"
 authors:
   - name: Hagen O
     email: oskar@hagen.bio
@@ -63,15 +63,19 @@ names(sss) <- c("M0", "ME", "MET")
 
 # Environment
 
-We simulate 5 Myrs of environmental dynamics of four patches (i.e. A, B, C and D), inspired by a theoretical but realistic isolated island system placed in the south with a total area of 60X60 Km^2^ with site area = 1 Km^2^ and timestep=10'000 years and number of timesteps=501 (Animation 1). We consider dynamic topography, minimum and maximum temperature combined with sea level changes which intensify during the quaternary (\~last 2.6 Ma) and happened in a periodicity of 100 ky (i.e. 10 timesteps) [@pillans1998].  This approximates earths eccentricity with a conservative periodicity [@shepard2018] and reflects interactions among global climate dynamics and changes in incoming solar radiation, likely influencing ecological and evolutionary patterns. We approximating empirical mean temperature and sea levels [@westerhold2020] [@hoffmann2011]. Our dynamic temperature oscillates at similar periodicity and temporal intensity, so that lower temperature periods match with the periods of lowest sea levels (*Figure 1*). Given the randomly attribute location on Earth, i.e. south hemisphere, The south sides of each patch were 2℃ colder than the northern sides and were smoothened with a focal function of mean 3x3 sites (raster package). We derive $T_{min}$ and $T_{max}$ fluctuations though time decreasing 0.01℃ (i.e. lapse rate 0.01℃/m) for each increase in altitude (m). We draw minimum and maximum temperature from site mean temperatures by respectively subtracting and adding the absolute values from a normal distribution with mean=0 and standard deviation $SD=\frac{E_i}{max(E)}$ . This means that the distance between $T_{min}$ and $T_{max}$ increases in likelihood the higher the scaled site elevation $E_i$ (m) is. Lowest available elevation of all times was -115m and the highest elevation in all times was 803m from final timestep sea level (i.e. 0m). This result in temperature ranges of 0---5℃ (Animation 1, *Figure 2*). In all our simulations we penalize connectivity though a cost multiplier of geographical distance [@hagen2021]. We used a cost of four (4) for unsuitable sites (i.e. under sea level) and 1 for suitable sites with the addition of 0.1 per 100m slope difference between source and destination site. Empirical evidence suggest that for high elevation species, greater elevation equals greater dispersal barriers, as mountain peaks are often embedded in a low elevation matrix and thus creating an island-like system [@vasconcelos2020]. Moreover, by choosing a strong matrix resistance, i.e. four, we stress the effects of topography, geodynamics and sea-level changes considering habitat unsuitability within 10'000 years.
+We simulated 5 million years of environmental dynamics on four islands (A, B, C, and D), inspired by a realistic theoretical isolated island system in the Southern Hemisphere with a total area of 60x60 km² (cell area = 1 km² and timestep = 10,000 years), leading to 501 timesteps (Animation 1). We considered dynamic topography, minimum and maximum temperature variations combined with sea level changes, which intensified during the Quaternary (\~last 2.6 Ma) with a periodicity of 100 ky (i.e., 10 timesteps) [@pillans1998]. This approximates Earth's eccentricity with a conservative periodicity [@shepard2018] and reflects interactions among global climate dynamics and changes in incoming solar radiation, likely influencing ecological and evolutionary patterns. We approximated empirical mean temperature and sea levels [@westerhold2020; @hoffmann2011].
 
-Our simulations started with three patches (i.e. A, B and C) which do not change in topography and end with four (i.e. A, B, C and D) patches (Figure 1). Patch A and B have their connectivity periodically increased as a result of a shallow land bridge that increases in connectivity depending on sea level changes (Figure 1, Figure 3, Figure 4) while patch C remains relatively isolated. Patch D starts appearing around 1.5 Ma as a result of topographic and sea level changes.
+Temperature and sea level oscillated with similar periodicity and intensity, so that lower temperature periods matched with the periods of lowest sea levels (Figure 1 in the main article). Given the location on Earth, i.e., the Southern Hemisphere, the northern sides of each island were 2℃ warmer than the southern sides and were smoothed with a focal function of mean 3x3 sites (raster package). We derived $T_{min}$ and $T_{max}$ fluctuations over time by decreasing 0.01℃ for each meter increase in altitude (lapse rate 0.01℃/m). Minimum and maximum temperatures were drawn from site mean temperatures by respectively subtracting and adding absolute values from a normal distribution with mean = 0 and standard deviation $SD = \frac{E_i}{max(E)}$. This means that the distance between $T_{min}$ and $T_{max}$ increases as site elevation $E_i$ (m) increases. The lowest available elevation was -115 m, and the highest elevation was 803 m above sea level at the final timestep (i.e., 0 m). This resulted in temperature ranges of 0 to 5℃ (Animation 1, Figure 2).
+
+In all our simulations, we penalized connectivity through a cost multiplier of geographical distance, similarly to [@hagen2021]. We used a cost of four (4) for unsuitable sites (i.e., below sea level) and 1 for suitable sites, with an additional 0.1 per 100 m slope difference between source and destination sites. Empirical evidence suggests that for high elevation species, greater elevation changes represent greater dispersal barriers, as mountain peaks are often embedded in a low elevation matrix, creating an island-like system [@vasconcelos2020]. By choosing a strong matrix resistance of four, we emphasized the effects of topography, geodynamics, and sea-level changes.
+
+Our simulations started with three islands (A, B, and C), which did not change in topography, and ended with four islands (A, B, C, and D) (Figure 1). Island A and B had their connectivity periodically increased due to a shallow land bridge that enhanced connectivity between these islands when sea levels were low (Figure 1, Figure 3, Figure 4), while island C remained relatively isolated regardless of sea level changes. Island D began appearing around 1.5 Ma due to topographic and sea level changes.
 
 ```{r}
 #| label: fig-envir
 #| fig-height: 5
 #| fig-cap: |
-#|   Connectivity costs in reference to the center of each patch (i.e. A,B,C and D) for two timesteps, i.e. Present (0 Ma, resp. A,B,C and D) and for 130'000 years ago (0.13 Ma, resp. E,F,G and H). Note the changes in connectivity due to sea level changes between the present and the lowest seal level period (i.e. 0.13 Ma). 
+#|   Connectivity costs in reference to the center of each island (i.e. A,B,C and D) for two timesteps, i.e. Present (0 Ma, resp. A,B,C and D) and for 130'000 years ago (0.13 Ma, resp. E,F,G and H). Note the changes in connectivity due to sea level changes between the present and the lowest seal level period (i.e. 0.13 Ma). 
 library(raster)
 library(viridis)
 library(utils)
@@ -143,7 +147,7 @@ for (tst_i in 1:length(tst)){
 #| label: fig-envir_2
 #| fig-height: 5
 #| fig-cap: |
-#|   Connectivity costs in reference to the center of each patch (i.e. A,B,C and D) for two timesteps, i.e. Present (0 Ma, resp. A,B,C and D) and for 130'000 years ago (0.13 Ma, resp. E,F,G and H). Note the changes in connectivity due to sea level changes between the present and the lowest seal level period (i.e. 0.13 Ma). 
+#|   Connectivity costs in reference to the center of each island (i.e. A,B,C and D) for two timesteps, i.e. Present (0 Ma, resp. A,B,C and D) and for 130'000 years ago (0.13 Ma, resp. E,F,G and H). Note the changes in connectivity due to sea level changes between the present and the lowest seal level period (i.e. 0.13 Ma). 
 library(raster)
 library(viridis)
 library(utils)
@@ -217,15 +221,19 @@ for (tst_i in 1:length(tst)){
 
 # Eco-evolutionary models
 
-In short, M0 assume a fixed dispersal and competitive traits for all species within a simulation (n=`r nrow(sss$M0$parms)`). ME breaks this assumption by allowing dispersal and competitive traits to evolve freely, thus diverging with time between species (n=`r nrow(sss$ME$parms)`). MET adds a zero sum (i.e. a trade-off) between dispersal and competitive traits, assuming that no super species (i.e. $d_i=1$ , $l_i=1$) are possible (n=`r nrow(sss$MET$parms)`). M0 serves as a reference and allowed the exploration of parameter ranges and sensitivity the system. The two alternative simulation scenarios (i.e. ME and MET), referred to as counterfactuals, investigate the effects of manipulating different components of the model. Specifically, these counterfactuals involved modifying the underlying biological model specifically referent to the evolution and trade-offs between dispersal and competitive abilities, focusing on how dispersal and species interactions affect colonization and other emergent properties in our eco-evolutionary models.
+We build three models:
 
-This automatically made species within a simulation not only diverge between each other on their temperature optime $T_i$ and niche widht $\omega_i$ (i.e. for M0, ME and MET), but also on dispersal $d_i$ and competitive $l_i$ traits (i.e. for ME and MET). For each counter-factual, we ran 2000 simulations with the same parameters for all models. This systematic exploration of alternative scenarios allowed us to assess the impact of specific model parameters on the resulting biodiversity patterns. We additionally run $XYZ=XYZ$ Specifically, we collected $\alpha$, $\beta$ and $\gamma$ biodiversity metrics, colonization, speciation, extinction as well as trait proxies related to environmental and biotic suitability.
+1. **M0** assumes fixed dispersal and competitive traits for all species within a simulation (n=`r nrow(sss$M0$parms)`). 
+2. **ME** relaxes this assumption by allowing dispersal and competitive traits to evolve freely, resulting in divergent values over time between disconnected populations and different species (n=`r nrow(sss$ME$parms)`). 
+3. **MET** introduces a linear trade-off between dispersal and competitive traits, ensuring that no super species (i.e., $d_i=1$, $l_i=1$) are possible (n=`r nrow(sss$MET$parms)`). 
+
+In context, M0 serves as a reference model, facilitating the exploration of parameter ranges and sensitivity tests. The two alternative simulation scenarios, ME and MET, referred to as counterfactuals, investigate the effects of manipulating different components of the model. Specifically, these counterfactuals involve modifying the underlying biological model concerning the evolution and trade-offs between dispersal and competitive abilities. Consequently, species within a simulation not only diverge in their temperature optima $T_i$ and niche width $\omega_i$ (applicable for M0, ME, and MET), but also in dispersal $d_i$ and competitive $l_i$ traits (applicable for ME and MET). For each counterfactual, we conducted 2000 simulations with the same parameters for all models. This systematic exploration of alternative scenarios allowed us to assess the impact of specific model parameters on resulting biodiversity patterns.
 
 ## Initial conditions
 
-All models, i.e. M0, ME and MET, were initiated at 5 Ma with three species, each with populations spread thought the suitable sites of each patch (i.e. sp1 on patch A, sp2 on patch B, and sp3 on patch C). Initial populations had thermal range $\omega_i=0.4$ and thermal optimum equal to the local mean temperature $T_i=T_{mean}$.
+All models (M0, ME, and MET) were initiated at 5 Ma with three species, each with populations distributed across the suitable sites of each island (i.e., sp1 on island A, sp2 on island B, and sp3 on island C). Initial populations had a thermal range $\omega_i=0.4$ and a thermal optimum equal to the local mean temperature $T_i=T_{mean}$.
 
-We did a full factorial experiment ranging from extreme dispersal and competitive abilities $d_i=$ `r put_brak(sss[[1]]$parms$dispersal)` $l_i=$ `r put_brak(sss[[1]]$parms$competition)` and fixed $\Theta_s=65$ (@fig-init-parameters) . For model MET we impose the trade-off to the same parameters as in the other models, so that no initial species would have a "assumingly wrong" -- meaning, wrong for consistency of MET. We randomized the seed at this stage, so that each single simulation could be reproduced.
+We conducted a full factorial experiment ranging from extreme dispersal and competitive abilities, $d_i=$ `r put_brak(sss[[1]]$parms$dispersal)` and $l_i=$ `r put_brak(sss[[1]]$parms$competition)`, with a fixed $\Theta_s=65$ (@fig-init-parameters). For the MET model, we imposed the trade-off assuming the same parameters as the other models, ensuring no initial species had inconsistently high values (i.e. physiologically implausible main Figure 2C). We randomized the seed at this stage so that each simulation could be reproduced.
 
 ```{r}
 #| label: fig-init-parameters
@@ -241,7 +249,7 @@ plot_lxy_summary(y="competition", x="dispersal", data=lpst, datacol="cpu_time", 
 
 ## Dispersal
 
-Frequencies of dispersal are given according to a Weibull function that has scale changed by d resulting in concentrated short range dispersal events for small d with increasingly larger and longer tails for larger d (@fig-dispersal).
+Frequencies of dispersal are given according to a Weibull function that has scale changed by $d$ resulting in concentrated short range dispersal events for small $d$ with increasingly larger and longer tails for larger $d$ (@fig-dispersal).
 
 ```{r}
 #| label: fig-dispersal
@@ -258,7 +266,7 @@ title(LETTERS[2], adj=0)
 
 ## Ecological equilibrium
 
-Ecological equilibrium was assumed for every site and for every timestep. Environmental fitness considered min and max temperature. Population size $N_i$ changes according to local site conditions (i.e. $T_{min}, T_{max}$\[9---26℃\] and evolving species temperature optimum $T_i$ and thermal range $\omega_i$ according to the geometric mean of a Gaussian environmental function at minimum and maximum site temperature (for an example, see @fig-environmental-fitnress).
+Ecological equilibrium was assumed for every site and at every timestep. Environmental fitness was determined by considering the minimum and maximum temperatures. Population size $N_i$ changes according to local site conditions (i.e., $T_{min}, T_{max}$ \[9 to 26℃\]) and the evolving species temperature optimum $T_i$ and thermal range $\omega_i$, based on the geometric mean of a Gaussian environmental function at minimum and maximum site temperatures (for an example, see @fig-environmental-fitnress).
 
 ```{r}
 #| label: fig-environmental-fitnress
@@ -289,7 +297,8 @@ axis(1, at=1:length(seq(0,1,0.05)), labels=seq(9,26,length.out=length(seq(0,1,0.
 legend("topleft", legend = c("Species X", "Species Y", "Species Z"), lwd=2, col=cols, bty='n')
 ```
 
-Relative growth rate decreases linearly with conspecific population size $B_i$ in the site with a conspecific interaction coefficient $\alpha_{ff}$ and a heterospecific interaction coefficient $\alpha_{fh}$. The conspecific interaction coefficient was fixed for all simulations (i.e. $\alpha_{ff}=0.2$), since our focus was on components on intrerspecific competition, i.e. modulated though heterospecific tolerance trait ($l$). For an example, see the interactions between three (3) and thirteen (13) species though ODE (i.e. 30 interaction) in our Lotka-Volterra model type (@fig-ecology-intercompetition AB and C respectively).
+Relative growth rate decreases linearly with conspecific population size $N_i$ in the site, with a conspecific interaction coefficient $\alpha_{ff}$ and a heterospecific interaction coefficient $\alpha_{fh}$. The conspecific interaction coefficient was fixed for all simulations (i.e., $\alpha_{ff}=0.2$), as our focus was on components of interspecific competition, modulated through the heterospecific tolerance trait ($l$). For an example, see the interactions between three (3) and thirteen (13) species through ODE (i.e., 30 interactions) in our Lotka-Volterra model type (@fig-ecology-intercompetition AB and C, respectively).
+
 
 ```{r}
 #| label: fig-ecology-intercompetition
@@ -520,10 +529,10 @@ $$
 \frac{dN_f}{dt}\frac{1}{N_f}=r_f-\alpha_{ff}N_f-\alpha_{fh}\sum_{k\neq f}N_k
 $$ {#eq-S1}
 
-with parameters $r_f, \alpha_{ff}$ and $\alpha_{fh}$. We first estimate the carrying capacity of a local population of species f (that is the equilibrium for the case $\alpha_{fh}=0$), that is determined by given by $N_f=r_f/\alpha_{ff}$ and by inserting the site-condition dependency of the maximal per capita growth rate r_f from equation 2 we obtain
+with parameters $r_f, \alpha_{ff}$ and $\alpha_{fh}$. We first estimate the carrying capacity of a local population of species f (that is the equilibrium for the case $\alpha_{fh}=0$), that is given by $N_f=r_f/\alpha_{ff}$ and by inserting the site-condition dependency of the maximal per capita growth rate $r_f$ from equation 2 we obtain
 
 $$
-K_f=\frac{r_f}{\alpha_{ff}}=\frac{g}{\alpha_{ff}}\times\sqrt{n_f(T_min)\times{n_f}(T_{max}})
+K_f=\frac{r_f}{\alpha_{ff}}=\frac{g}{\alpha_{ff}}\times\sqrt{n_f(T_{min})\times{n_f}(T_{max}})
 $$ {#eq-S2}
 
 The total population size of all species in the site is given by $J=\sum_{i=1}^{S}N_i$ where S is the total number of species in the site. Assuming zero-sum dynamics, which emerges if there is density dependence at the individual scale (e.g., through crowding competition), the number of heterospecifics at the site is given in good approximation by $\sum_{i\neq f} N_i=J-N_f$ . Thus, equation 1 in equilibrium simplifies to
@@ -543,7 +552,7 @@ $$
 \alpha_{fh}J<r_f
 $$ {#eq-S5}
 
-which also means that heterospecific competition must be sufficiently small to allow population growth at low populations sizes (this is the so called invasion criterion). Note that we obtain from equation 5 for small abundances of the focal species f the per-capita population growth rate $\frac{dN_f}{dt} \frac{1}{N_f} =r_f-\alpha_{fh}J$, which is positive if equation is satisfied. As explained in detail in Wiegand et al. (2021), the total population size J in one site at equilibrium can be then be estimated as $$
+which also means that heterospecific competition must be sufficiently small to allow population growth at low populations sizes (this is the so called invasion criterion). Note that we obtain from equation 5, for small abundances of the focal species f the per-capita population growth rate $\frac{dN_f}{dt} \frac{1}{N_f} =r_f-\alpha_{fh}J$, which is positive if equation 5 is satisfied. As explained in detail in Wiegand et al. (2021), the total population size J in one site at equilibrium can be then be estimated as $$
     J=\frac{\sum_{f=1}^S\frac{\alpha_{ff}K_f}{\alpha_{ff}-\alpha_{fh}}} {(1+\sum_{f=1}^S \frac{\alpha_{fh}}{\alpha_{ff}-\alpha_{fh}})}
 $$ {#eq-S6}
 
@@ -559,7 +568,7 @@ $$\frac{r_f}{\overline{r_f}}>\frac{S\alpha_{fh}}{\alpha_{ff}+\alpha_{fh}(S-1)}=\
 
 The factor $\mu$ is always smaller than one and particularly small if the number of species (S) and the heterospecific interaction coefficient $\alpha_{fh}$ are small. It approaches a value of one if the species richness *S* becomes large and/or if heterospecific competition $\alpha_{fh}$ approaches the strength of conspecific competition $\alpha_{ff}$. Equation 8 defines a minimum value for the growth rate $r_f$ to allow for a positive equilibrium. Equation 8 thus tells us that a species will go extinct in a given site (i.e. having a negative equilibrium abundance) if its maximal per capita population growth rate $r_f$ is too small, compared to the average per capita population growth rate $\overline{r_f}$ of all species at the site. Importantly, the environmental conditions, leading to lower growth rate $r_f$, can be poorer if there are fewer species at the site and/or if heterospecific competition is weaker.
 
-To estimate equilibrium in the context of competition dynamics, we implement an iterative approach. Firstly, all species in a site are checked to determine if $a_{ff}>a_{ff}$ (condition 1, eq. 4). If not, the species is removed from consideration as conspecifics compete weaker than heterospecifics. Next, the carrying capacity ($J^{*}$) is estimated based on the values of $K_f, a_{ff}, a_{fh}$ for each species *f (*eq. 2). Then, all species are checked again to see if the product of the intraspecific competition coefficient and carrying capacity is greater than the product of the interspecific competition coefficient $a_{ff}K>a_{fhJ^{*}}$ (condition 2, eq. 4).  Species that do not meet this condition, indicating a too low carrying capacity, are removed, and the estimation process returns estimating $J^{*}$ (eq. 6). This is repeated until all remaining species satisfy the condition 2. Finally, the equilibrium of each species$N^*_f$ is demonstrated using equation 6 (@fig-ecology-intercompetition).
+To estimate equilibrium in the context of competition dynamics, we implement an iterative approach. Firstly, all species in a site are checked to determine if $a_{ff}>a_{ff}$ (condition 1, eq. 4). If not, the species is removed from consideration as conspecifics compete weaker than heterospecifics. Next, the carrying capacity ($J^{*}$) is estimated based on the values of $K_f, a_{ff}, a_{fh}$ for each species *f (*eq. 6). Then, all species are checked again to see if the product of the intraspecific competition coefficient and carrying capacity is greater than the product of the interspecific competition coefficient $a_{ff}K>a_{fhJ^{*}}$ (condition 2, eq. 4). Species that do not meet this condition, indicating a too low carrying capacity, are removed, and the estimation process returns estimating $J^{*}$ (eq. 6). This is repeated until all remaining species satisfy the condition 2. Finally, the equilibrium of each species$N^*_f$ is estimated using equations 4 and 6 (@fig-ecology-intercompetition).
 
 ## Summary statistics
 
@@ -567,7 +576,7 @@ We conducted several statistics using custom and code from several R-packages [@
 
 ## M0
 
-M0 diversity statistics reflected our expectations on general patterns of diversity, such as highest spetiation rates at intermediary diversity diversity levels @fig-sumstats_1-M0 . Meaning that peaks of $\gamma$ diversity relate with the spatial structure of our landscape. After investigation, all speciation events of simulations with dispersal $d_i<0.1$ happened within patches, and mostly during the dynamic phase (@fig-speciation-M0-though_time A). Speciation within patches was only observed in M0, as for ME and MET dispersal quickly evolved beyond the critical and small. We also can notice the qualitative changes in speciation events for intermediary dispersal $d_i=[0.15-0.55]$, which started involving speciation events between patches C and D, but for patch D only at the dynamic time phase, i.e. 2--0 Ma (@fig-speciation-M0-though_time C).
+M0 diversity statistics reflected our expectations on general patterns of diversity, such as the highest speciation rates at intermediate diversity levels (@fig-sumstats_1-M0). This indicates that peaks of $\gamma$ diversity relate to the spatial structure of our landscape. We found that all speciation events in simulations with dispersal $d_i<0.1$ occurred within islands and mostly during the dynamic phase (@fig-speciation-M0-though_time A). Speciation within islands was only observed in **M0**, as dispersal in **ME** and **MET** quickly evolved beyond the critical threshold. We also observed qualitative changes in speciation events for intermediate dispersal $d_i=[0.15-0.55]$, which began involving speciation events between islands C and D (@fig-speciation-M0-though_time C).
 
 ```{r}
 #| label: fig-sumstats_1-M0
@@ -614,7 +623,7 @@ for (add_i in 1:length(additional_stats)){
 #| label: fig-speciation-M0-though_time
 #| fig-height: 4
 #| fig-cap: |
-#|   Mean speciation percentage for M0 with dispersal (A) smaller than, 0.15; (B) between 0.15 and 0.55; and (C) bigger than 0.55. We show for each patch (in different collors) and each phase (i.e. Total 4.5-0Ma, Stable 4.5-2.5Ma, Dynamic 2-0Ma) for speciation events between or within patches (respectively triangles and circels).
+#|   Mean speciation percentage for M0 with dispersal (A) smaller than, 0.15; (B) between 0.15 and 0.55; and (C) bigger than 0.55. We show for each island (in different collors) and each phase (i.e. Total 4.5-0Ma, Stable 4.5-2.5Ma, Dynamic 2-0Ma) for speciation events between or within islands (respectively triangles and circels).
   mbt <- get_parm_stats(parms = sss[[1]]$parms, 
                         stat = cbind(sss[[1]]$stats$t, sss[[1]]$stats$tt$Total))
   mbs <- get_parm_stats(parms = sss[[1]]$parms, 
@@ -664,7 +673,7 @@ for (disprange_i in 1:n_dispr) {
 
 ```
 
-Investigating spatial dynamics for M0 during 4.5-0Ma ( @fig-space-M0-though_time A-D) shows that mean occupancy increases with dispersal, while changes leave scale signatures and show that proportional change (i.e. $\frac{(increase - decrease)}{total\space occupancy}$). decreases with competition, while neutral models have higher proportional increase/decrease ratio. Moreover, we can see that this signature was stronger during the dynamic stage of this simulations ( @fig-space-M0-though_time I-L).
+Investigating spatial dynamics for M0 during 4.5-0 Ma (@fig-space-M0-though_time A-D) shows that mean occupancy increases with dispersal, while changes leave scale signatures and show that proportional change (i.e., $\frac{(increase - decrease)}{total\space occupancy}$) decreases with competition. In contrast, neutral models have a higher proportional increase/decrease ratio. Moreover, we can see that this signature was stronger during the dynamic stage of these simulations (@fig-space-M0-though_time I-L).
 
 ```{r}
 #| label: fig-space-M0-though_time
@@ -824,15 +833,15 @@ title(paste0("M0 ",put_brak(ranges[[iab]])))
 
 ```
 
-Inspecting the community distances between all the patches, there is a clear effect of increase in community diversity with patch distance and dispersal ability @fig-sumstats_rest-M0-7 . As expected **\[refs\]**, competition tends to decrease community distance overall where communities reach maximum diversity. The combination of community distances between islands A, B, C, and D is depicted for M0 in @fig-sumstats_rest-M0-8. Each line corresponds to simulations with the same competitive value. Community distance represents the standardized value of the community distance, akin to the beta diversity version of the Mean Pairwise Distance (MPD), which provides the average phylogenetic distance between two communities.
+Inspecting the community distances between all the islands, there is a clear effect of increased community diversity with island distance and dispersal ability (@fig-sumstats_rest-M0-7). As expected, competition tends to decrease community distance overall, where communities reach maximum diversity. The combination of community distances between islands A, B, C, and D is depicted for **M0** in @fig-sumstats_rest-M0-8. Each line corresponds to simulations with the same competitive value. Community distance represents the standardized value of community distance, akin to the beta diversity version of the Mean Pairwise Distance (MPD), which provides the average phylogenetic distance between two communities.
 
 ## ME
 
 Figure @fig-space-ME-though_time captures the evolving spatial patterns and occupancy dynamics of species from 4.5 million years ago (Ma) to the present. This visualization portrays a period of stability between 4.5 and 2.5 Ma, followed by a phase of significant change from 2 to 0 Ma, elucidating the evolutionary trajectory of species occupancy over millennia.
 
-Figure @fig-corrplot-ME-phases delves into the intricate correlations between selected summary statistics across various dispersal distance intervals. This analysis sheds light on the complex interplay between dispersal, competition and landscape structure.
+Figure @fig-corrplot-ME-phases delves into the intricate correlations between selected summary statistics across various dispersal distance intervals. This analysis sheds light on the complex interplay between dispersal, competition, and landscape structure.
 
-Furthermore, @fig-sumstats_1-ME, along with @fig-sumstats_rest-ME-1, @fig-sumstats_rest-ME-2, @fig-sumstats_rest-ME-3, @fig-sumstats_rest-ME-4, @fig-sumstats_rest-ME-5, @fig-sumstats_rest-ME-6, @fig-sumstats_rest-ME-7 and @fig-sumstats_rest-ME-8 present multiple statistical summaries along initial dispersal trait values. The depiction of competition is nuanced, with simulations regimes delineated by unique lines within the same initial competitive grouping, offering a comprehensive overview of the dispersal, competitive and landscape structure behind biodiversity dynamics.
+Furthermore, @fig-sumstats_1-ME, along with @fig-sumstats_rest-ME-1, @fig-sumstats_rest-ME-2, @fig-sumstats_rest-ME-3, @fig-sumstats_rest-ME-4, @fig-sumstats_rest-ME-5, @fig-sumstats_rest-ME-6, @fig-sumstats_rest-ME-7 and @fig-sumstats_rest-ME-8 present multiple statistical summaries along initial dispersal trait values. The depiction of competition is nuanced, with simulation regimes delineated by unique lines within the same initial competitive grouping, offering a comprehensive overview of the dispersal, competitive, and landscape structure behind biodiversity dynamics.
 
 ```{r}
 #| label: fig-space-ME-though_time
@@ -1363,11 +1372,11 @@ if(ita<=length(lt)){
 
 ## Trait Changes
 
-@fig-final-traits-change-location-M0MEMET illustrates the variations in trait changes for the models M0, ME, and MET across different ecological parameters: dispersal, tolerance to other species, thermal range, and thermal optimum. Each model's (i.e. columns) shows the slope of trait change between the initial and final timesteps, offering insights into how these traits evolve over time under different conditions and assumptions. The use of color gradients conveys the intensity of competition affecting these traits, with warmer colors indicating higher levels of competition. This visualization underscores the complex interplay between competition and trait adaptability in ecological models, highlighting how traits like dispersal capacity and temperature tolerance shift in response to environmental pressures and species interactions.
+@fig-final-traits-change-location-M0MEMET illustrates the variations in trait changes for the models M0, ME, and MET across different ecological parameters: dispersal, tolerance to other species, thermal range, and thermal optimum. Each model's (i.e. columns) shows the slope of trait change between the initial and final timesteps, highlighting how these traits evolve over time under different conditions and assumptions. The use of color gradients conveys the intensity of competition affecting these traits, with warmer colors indicating higher levels of competition. This visualization underscores the complex interplay between competition and trait adaptability in ecological models, highlighting how traits like dispersal capacity and temperature tolerance shift in response to environmental pressures and species interactions.
 
 @fig-final-traits-by-diversity presents the final gamma richness in relation to various mean parameter values at the final timestep, including thermal range, dispersal, and heterospecific interaction coefficient, across the models M0, ME, and MET. The columns for each model demonstrate the impact of these parameters on biodiversity, utilizing color gradients to represent the strength of competition and dispersal. The analysis of these relationships stresses the critical roles that temperature tolerance, dispersal capabilities, and interactions with other species play in shaping community richness and diversity.
 
-@fig-slopes-trait_change depicts the final gamma richness plotted against the mean trait changes, illustrating the slope between initial and final trait values for all species within the models M0, ME, and MET. It examines traits such as thermal range, dispersal, and heterospecific interaction coefficient, segmented by each model in separate columns. Two color gradients are used for the strength of competition and dispersal. This visualization effectively showcases the linkage between trait adaptability and community richness, emphasizing the importance of assumptions to evolutionary responses to environmental and interspecific pressures in determining ecological outcomes.
+@fig-slopes-trait_change depicts the final gamma richness plotted against the mean trait changes, illustrating the slope between initial and final trait values for all species within the models M0, ME, and MET. Note the traits such as thermal range, dispersal, and heterospecific interaction coefficient, segmented by each model in separate columns. Two color gradients are used for the strength of competition and dispersal. This visualization showcases the linkage between trait adaptability and community richness, emphasizing the importance of assumptions to evolutionary responses to environmental and interspecific pressures in determining ecological outcomes.
 
 ```{r}
 #| label: fig-final-traits-change-location-M0MEMET
@@ -1485,7 +1494,7 @@ for (i in 1:3){
 
 ## Further analysis
 
-Additional, we explore the intricate dynamics of species interaction and environmental adaptation through a series of figures. Figure @fig-final-traits-XXXXX showcases the final mean dispersal trait ($d$), plotted against final the mean competitive trait ($l$) (i.e. tolerance to other species), thermal optimum ($T$), and thermal range ($\omega$) across Models MO, ME, and MET (@fig-final-traits-XXXXX Figure A-I). Further expanding on ecological theories, Figure @fig-testing-of-limiting-similarity delves into the theory of limiting similarity, illustrating how signals for species diversity impacting average population sizes through competitive exclusion. Lastly, Figure @fig-testing-comp-speciation-dispersal juxtaposes speciation versus extinction percentages with temporal stability in macroevolutionary events. This figure not only highlights the impact of interspecific competition on biodiversity outcomes but also shows temporal invariability fo the macroevolutionary processes (@fig-testing-comp-speciation-dispersal D-F).
+Additional, we explore the intricate dynamics of species interaction and environmental adaptation through a series of figures. Figure @fig-final-traits-XXXXX showcases the final mean dispersal trait ($d$), plotted against final the mean competitive trait ($l$) (i.e. tolerance to other species), thermal optimum ($T$), and thermal range ($\omega$) across Models MO, ME, and MET (@fig-final-traits-XXXXX Figure A-I). Further expanding on ecological theories, Figure @fig-testing-of-limiting-similarity delves into the theory of limiting similarity, illustrating how signals for species diversity are correlated with average population sizes linked through competitive exclusion. Lastly, Figure @fig-testing-comp-speciation-dispersal juxtaposes speciation versus extinction percentages with temporal stability in macroevolutionary events. This figure highlights the impact of interspecific competition on biodiversity outcomes and shows temporal invariability fo the macroevolutionary processes (@fig-testing-comp-speciation-dispersal D-F).
 
 ```{r}
 #| label: fig-final-traits-XXXXX
@@ -1619,11 +1628,11 @@ emp <- lapply(lt, function(x){
 
 ## Handpicked simulation
 
-Examining a single simulation, specifically how trait changed though time for each species enables us to closely investigate the implemented processes in action (@fig-single_sim_M0_ME_MET_traits_phylo). We select a simulation with initial *l*=9.56 and *d*=0.367, thus sampling initial value of *l* that leads to moderate competition and within connectivity regime $\kappa_1$. Moreover, in all simulations island C remained occupied by only one species, serving as a control on biodiversity while island D is never occupied (@fig-single_sim_M0MEMET_space_time). As implemented, *l* and *d* did not change though time for M0 (@fig-single_sim_M0_ME_MET_traits_phylo I,M). Note single black isolated line that corresponds to single species in island C (@fig-single_sim_M0_ME_MET_traits_phylo E,F,G,J,K,O).
+Examining a single simulation, specifically how trait changed though time for each species, enables us to closely investigate the implemented processes in action (@fig-single_sim_M0_ME_MET_traits_phylo). For this we select a simulation with initial *l*=9.56 and *d*=0.367, thus sampling initial value of *l* that leads to moderate competition and falls within connectivity regime $\kappa_1$. Moreover, in all simulations, island C remained occupied by only one species, serving as a control on biodiversity while island D is never occupied (@fig-single_sim_M0MEMET_space_time). As implemented, *l* and *d* did not change though time for M0 (@fig-single_sim_M0_ME_MET_traits_phylo I,M). Note the single black isolated line that corresponds to single species in island C (@fig-single_sim_M0_ME_MET_traits_phylo E,F,G,J,K,O).
 
-All models exhibit rapid niche specialization around 1 Ma, characterized by a decrease in ω and the expansion of T. The inclusion of trait evolution (i.e. ME and MET) illustrates the swift evolution of tolerance to other species' traits (l) in the presence of other species. Note isolated species in island C, with clearly lower final *l* than species present in islands A and B (@fig-single_sim_M0_ME_MET_traits_phylo J,K). However, this tolerance is less pronounced when a trade-off exists between *d* and *l*. Furthermore, the ME and MET simulations reveal a less abrupt decrease in niche width, though thermal range, compared to M0, as the latter only allows for species to escape competition in this form (i.e. no *l* or d evolution). In MET simulations, the trade-off deviates *d* evolution from a more neutral case, i.e. ME. Spatial patterns diverge among the models, with biodiversity hotspots shifting towards the center of the island - at this specific simulation (@fig-single_sim_M0MEMET_space_time A,B,C) while the frequency of local extinctions consistently rises during periods of increased environmental variability (i.e. 2.5-0 Ma), impacting $\alpha$ diversity but without any global extinction (@fig-single_sim_M0MEMET_space_time G,H,I).
+All models exhibit rapid niche specialization around 1 Ma, characterized by a decrease in ω and the increase in variability of T. The inclusion of trait evolution (i.e. ME and MET) illustrates the swift in the evolution of tolerance to other species' traits (l) in the presence of other species. Note isolated species in island C, with clearly lower final *l* than species present in the species rich islands A and B (@fig-single_sim_M0_ME_MET_traits_phylo J,K). Note that this tolerance is less pronounced when a trade-off between *d* and *l* exists. Furthermore, ME and MET simulations reveal a less abrupt decrease in niche width, though thermal range, compared to M0, as the latter only allows for species to escape competition in this form (i.e. no *l* or *d* evolution). In MET simulations, the trade-off deviates *d* evolution from a more neutral case, i.e. ME. Spatial patterns diverge among the models, with biodiversity hotspots shifting towards the center of the island - at this specific simulation (@fig-single_sim_M0MEMET_space_time A,B,C) while the frequency of local extinctions consistently rises during periods of increased environmental variability (i.e. 2.5-0 Ma), impacting $\alpha$ diversity but without any global extinction (@fig-single_sim_M0MEMET_space_time G,H,I).
 
-The described cycle can be depicted at @fig-simple, where a flowchart illustrates eco-evolutionary dynamics observed in M0, ME, and MET, which are relevant to biodiversity. All processes depicted are strongly influenced by dispersal and landscape structure. Changes in diversity influence heterospecific competition. Subsequently, a transition occurs towards niche specialization, suggesting that species evolve to occupy specific ecological niches as they compete, such as a decrease in thermal range ($\omega$). This specialization may lead to a reduction in species' geographical range (i.e. local extinctions). If global extinction happens, diversity is negatively impacted (red arrow @fig-simple). Conversely, if extinction is averted, the flow progresses to isolation, suggesting that species may become isolated in particular habitats or environments. From isolation, there arises potential for speciation though isolation fostering the emergence of new species (if they global extinction is avoided). If speciation unfolds, the flow completes a loop, contributing to diversity (blue arrow @fig-simple). Overall, @fig-simple exemplifies the interconnectedness of ecological and evolutionary processes and the delicate balance between competition, niche specialization, geographical range changes, extinction, isolation, and speciation in shaping biodiversity dynamics. It highlights a cyclic pattern in a delicate balance where local extinction can stimulate renewed diversity.
+The described cycle is depicted at @fig-simple, where a flowchart illustrates eco-evolutionary dynamics observed in M0, ME, and MET, which are relevant to biodiversity. All processes are strongly influenced by dispersal and landscape structure. Changes in diversity influence heterospecific competition. Subsequently, a transition occurs towards niche specialization, suggesting that species evolve to occupy specific ecological niches as they compete, such as a decrease in thermal range ($\omega$). This specialization may lead to a reduction in species' geographical range (i.e. local extinctions). If global extinction happens, diversity is negatively impacted (red arrow @fig-simple). Conversely, if extinction is averted, the flow progresses to isolation, suggesting that species may become isolated in particular habitats or environments. From isolation, there arises potential for speciation though isolation fostering the emergence of new species (if they global extinction is avoided). If speciation unfolds, the flow completes a loop, contributing to diversity (blue arrow @fig-simple). Overall, @fig-simple exemplifies the interconnectedness of ecological and evolutionary processes and the delicate balance between competition, niche specialization, geographical range changes, extinction, isolation, and speciation in shaping biodiversity dynamics. It highlights a cyclic pattern in a delicate balance where local extinction can stimulate renewed diversity.
 
 ::: {#fig-simple .mermaid}
 ```{mermaid, fig.height: 4}
@@ -1747,6 +1756,15 @@ for (i in 1:3){
 .
 
 .
+
+.
+
+.
+
+.
+
+.
+
 
 ::: {#references}
 # References
